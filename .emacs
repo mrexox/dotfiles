@@ -1,256 +1,129 @@
-(set-language-environment 'UTF-8)
-(set-default-coding-systems 'utf-8)	
-(prefer-coding-system 'utf-8)		
-(fset 'yes-or-no-p 'y-or-n-p)						; for easy use
-(require 'package)
+;;; This configuration is mainly used for regular txt files.
 
-;; For package repositories
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+;; Settings
 
-(package-initialize)
+;;; Code
 
-(setq require-final-newline t)					; important for some programs
+(set-frame-font "Fira Code 17" t)
+(setq diary-file "~/Dropbox/My/diary")
+(when (window-system)
+  (set-frame-size (selected-frame) 100 40)
+  (set-frame-position (selected-frame) 300 90))
 
-;; Startup
-(setq inhibit-splash-screen t)					
-(setq inhibit-startup-message t)				; no startup message
-(setq initial-scratch-message
-	  ";; Hello, Ian on Ubuntu. Happy hacking!\n\n")
-(setq frame-title-format "%b")					; top line
-(setq-default make-backup-files nil)			; no file~ files
-(display-time)									; time on status panel
+(setq inhibit-splash-screen t)
+(setq inhibit-startup-message t)
+(menu-bar-mode 0)
+(scroll-bar-mode -1)
+(tool-bar-mode -1)
+;(fido-vertical-mode t)
 
-(show-paren-mode)
+;; In case no theme is used
+(set-foreground-color "#222222")
+(set-background-color "#f5f5f5")
+(set-face-attribute 'region nil :background "#f5ebe0" :foreground "#d14d72")
+(set-cursor-color "#bbbbbb")
+(prefer-coding-system 'utf-8)
+(setq exec-path (append exec-path '("/opt/homebrew/bin")))
+(setenv "PATH" (concat (getenv "PATH") ":/opt/homebrew/bin"))
+(setq visible-bell nil)
+(setq ring-bell-function 'ignore)
 
-;; Allow C-x C-l and C-x C-u for lower and uppercase region
-;; respectively
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
+(setq exec-path (append exec-path '("/opt/homebrew/bin")))
 
-;; Cursor cool wow
-;;(setq-default cursor-type '(hbar . 2))
-;;(blink-cursor-mode -1)
-(menu-bar-mode -1)
-
-;; Useful key-binds
-(global-set-key (kbd "C-<tab>") 'other-window)
-(global-set-key (kbd "C-c C-e") '(lambda ()
-								   (interactive)
-								   (find-file "~/.emacs")))
-
-;; Set auto-fill-mode when text-node is active
-(add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
-(add-hook 'text-mode-hook '(lambda () (font-lock-mode 0)))
-(add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
-
-;; No scroll-bars and tool-bars
-(when window-system
-  (tool-bar-mode 0)
-  (scroll-bar-mode 0)
-  (custom-set-variables
-   '(initial-frame-alist (quote ((fullscreen . maximized))))))
-
-;; line counting
-(add-hook 'java-mode-hook '(lambda () (interactive) (linum-mode 1)))
-(add-hook 'perl-mode-hook '(lambda () (interactive) (linum-mode 1)))
-(add-hook 'c-mode-hook '(lambda () (interactive) (linum-mode 1)))
-(add-hook 'lisp-mode-hook '(lambda () (interactive) (linum-mode 1)))
-(add-hook 'javascript-mode-hook '(lambda () (interactive) (linum-mode 1)))
-(add-hook 'ruby-mode-hook '(lambda () (interactive) (linum-mode 1)))
-(add-hook 'css-mode-hook '(lambda () (interactive) (linum-mode 1)))
-
-;; ;; F10 works as run for perl programs
-;; (add-hook 'perl-mode-hook 
-;; 	  (lambda ()
-;; 	    (define-key perl-mode-map [f10] 
-;; 	      `(lambda () 
-;; 		 (interactive) 
-;; 		 (let ((args (read-string "Args: "))
-;; 		       (scriptname (buffer-name)))
-;; 		   (shell-command (concat "perl " scriptname " " args)))))))
-
-;; ;; Go mode
-;; (add-to-list 'load-path "~/.emacs.d/go-mode.el/")
-;; (require 'go-mode-autoloads)
-;; (add-hook 'go-mode-hook
-;;           (lambda ()
-;;             (add-hook 'before-save-hook 'gofmt-before-save)
-;;             (setq tab-width 2)
-;; 	    (linum-mode t)
-;;             (setq indent-tabs-mode 1)))
-
-;; ;; For Common Lisp development
-;; (add-to-list 'load-path "~/.emacs.d/slime/")
-;; (require 'cl)
-;; (setq-default inferior-lisp-program "sbcl")
-;; (require 'slime)
-;; (require 'slime-autoloads)
-;; (setq-default lisp-body-indent 2)
-;; (setq-default lisp-indent-function 'common-lisp-indent-function)
-;; (setq slime-contribs '(slime-fancy))
+(global-hl-line-mode +1)
+(show-paren-mode 1)
+(setq show-paren-delay 0)
 
 
-;; ;; React JSX mode
-;; (add-to-list 'auto-mode-alist '("components\\/.*\\.js\\'" . rjsx-mode))
-;; (add-to-list 'auto-mode-alist '("\\.ddl\\'" . sql-mode))
+;; Functions
 
-(setq-default tab-width 4)
-
-;; (add-hook 'js2-mode-hook (lambda () (linum-mode t)))
-;; (setq js2-basic-offset 2)
-;; (setq javascript-indent-level 2)
-
-;; (require 'ls-lisp)
-;; (setq ls-lisp-dirs-first t)
-;; (setq ls-lisp-use-insert-directory-program nil)
-
-;; Popup lib
-(add-to-list 'load-path "~/.emacs.d/popup-el")
-(require 'popup)
-
-;; Auto-complete
-(add-to-list 'load-path "~/.emacs.d/auto-complete")
-(require 'auto-complete)
-
-;; Web mode
-(add-to-list 'load-path "~/.emacs.d/web-mode/")
-(require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.jsx\\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.php?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.scss?\\'" . css-mode))
-(add-hook 'haskell-mode-hook #'hindent-mode)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(add-hook 'web-mode-hook
-		  (lambda ()
-			(linum-mode t)
-			(auto-complete-mode t)))
-;;			(setq web-mode-markup-indent-offset 2)
-;;			(setq web-mode-code-indent-offset 2)))
-
-(add-to-list 'load-path "~/.emacs.d/haml-mode")
-(require 'haml-mode)
-(add-hook 'haml-mode-hook
-		  (lambda ()
-			(setq indent-tabs-mode nil)
-			(define-key haml-mode-map "\C-m" 'newline-and-indent)))
-
-(defun turn-off-mouse (&optional frame)
+(defun kbd/insert-emdash ()
   (interactive)
-  (let ((inhibit-message t) (default-directory "~"))
-    (shell-command "synclient TouchpadOff=1")))
+  (insert-char 8212))
 
-(defun turn-on-mouse (&optional frame)
+(defun hooks/text-mode-hook ()
   (interactive)
-  (let ((inhibit-message t) (default-directory "~"))
-    (shell-command "synclient TouchpadOff=0")))
+  (setq cursor-type 'bar)
+  (setq buffer-face-mode-face '(:family "Literata Book" :height 200))
+  (buffer-face-mode)
+  (visual-line-mode)
+  (auto-save-visited-mode 1))
 
-;; (load-theme 'dracula t)
+(defun hooks/ruby-mode-hook ()
+  (interactive)
+  (display-line-numbers-mode t))
 
-;; (add-to-list 'load-path "~/.emacs.d/php-mode")
-;; (require 'php-mode)
+(defun focus ()
+  (interactive)
+  (darkroom-tentative-mode))
 
+;; Bindings
 
+(add-hook 'text-mode-hook 'hooks/text-mode-hook)
+(add-hook 'diary-mode-hook 'hooks/text-mode-hook)
+(add-hook 'ruby-mode-hook 'hooks/ruby-mode-hook)
+(global-set-key (kbd "C-c -") 'kbd/insert-emdash)
 
-;; PACKAGES
+(global-set-key (kbd "C-у") 'move-end-of-line)
+(global-set-key (kbd "C-ф") 'move-beginning-of-line)
 
-(add-to-list 'load-path "~/.emacs.d/slime")
-(require 'slime-autoloads)
-(setq inferior-lisp-program "/opt/sbcl/bin/sbcl")
-(setq slime-contribs '(slime-fancy))
-(setq-default lisp-body-indent 2)
-(setq slime-net-coding-system 'utf-8-unix)
-(setq-default lisp-indent-function 'common-lisp-indent-function)
-(slime-setup '(slime-repl
-               slime-fuzzy
-               slime-fancy-inspector
-               slime-indentation))
-(add-hook 'lisp-mode-hook
-		  (lambda ()
-			(linum-mode t)
-			(auto-complete-mode t)))
+;; Packages
 
-(add-to-list 'load-path "~/.emacs.d/neotree")
-(require 'neotree)
-(global-set-key [f8] 'neotree-toggle)
+(setq use-package-always-ensure t)
+(use-package projectile
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
 
+(use-package vertico
+  ;; :custom
+  ;; (vertico-scroll-margin 0) ;; Different scroll margin
+  ;; (vertico-count 20) ;; Show more candidates
+  ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+  ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+  :init
+  (vertico-mode))
+;; (require 'package)
+;; (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+;; (package-initialize)
 
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono Book 12" ))
+;; (use-package mood-line
+;;   ;; Enable mood-line
+;;   :config
+;;   (mood-line-mode)
+;;   (setq mood-line-glyph-alist mood-line-glyphs-fira-code))
 
-(add-to-list 'load-path "~/.emacs.d/disable-mouse")
-(require 'disable-mouse)
-(global-disable-mouse-mode)
+;; (use-package smartscan
+;;   :init
+;;   (smartscan-mode 1))
 
-(add-to-list 'custom-theme-load-path "/home/ian/.emacs.d/themes")
-(load-theme 'junio t)
-(setq calendar-week-start-day 1
-          calendar-day-name-array ["Вс" "Пн" "Вт" "Ср" "Чт" "Пт" "Сб"]
-          calendar-month-name-array ["Январь" "Февраль" "Март" "Апрель" "Май" 
-                                     "Июнь" "Июль" "Август" "Сентябрь"
-                                     "Октябрь" "Ноябрь" "Декабрь"])
-(setq view-diary-entries-initially t)
-;;(calendar)
-;;(switch-to-buffer (get-buffer "*scratch*"))
-;;(other-window)
+;; (use-package darkroom)
 
-(add-to-list 'load-path "~/.emacs.d/log4e")
-(require 'log4e)
+;; (use-package enh-ruby-mode)
+;; (use-package typescript-mode)
+;; (use-package markdown-mode)
 
-(add-to-list 'load-path "~/.emacs.d/yaxception")
-(require 'yaxception)
+;; (use-package magit
+;;   :config
+;;   (defalias 'b 'magit-blame-addition))
 
-(add-to-list 'load-path "~/.emacs.d/powerline")
-(require 'powerline)
-(powerline-default-theme)
+;; Startup windows
 
-;; (add-to-list 'load-path "/home/ian/.emacs.d/emacs-plsense")
-;; (require 'plsense)
-
-;; (setq plsense-popup-help-key "C-:")
-;; (setq plsense-display-help-buffer-key "C-M-;")
-;; (setq plsense-jump-to-definition-key "C->")
-
-;; ;; Make config suit for you. About the config item, eval the following sexp.
-;; ;; (customize-group "plsense")
-
-;; ;; Do setting recommemded configuration
-;; (setq shell-command-switch "-ic") ; Load .zshrc on shell-command
-;; (plsense-config-default)
-;; (custom-set-variables
-;;  '(initial-frame-alist (quote ((fullscreen . maximized))))
-;;  '(plsense-server-start-automatically-p t))
-
+;; (calendar)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-	("1b1e54d9e0b607010937d697556cd5ea66ec9c01e555bb7acea776471da59055" default)))
- '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
-   (quote
-	(powerline projectile dark-mint-theme haskell-mode smartparens slime flycheck magit dash))))
+   '(darkroom enh-ruby-mode geiser-guile geiser-mit magit markdown-mode
+	      mood-line projectile smartscan term-keys typescript-mode
+	      vertico)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-(load (expand-file-name "~/.quicklisp/slime-helper.el"))
-(setq inferior-lisp-program "sbcl")
-(server-start)
+(put 'downcase-region 'disabled nil)

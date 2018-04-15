@@ -1,0 +1,77 @@
+[apply]
+  whitespace = nowarn
+
+[core]
+  whitespace = -indent-with-non-tab,trailing-space,cr-at-eol
+  quotepath = false
+  autocrlf = input
+  excludesFile = ~/.gitignore
+  attributesfile = ~/.gitattributes
+
+[merge]
+  summary = true
+  conflictstyle = diff3
+
+[push]
+  default = current
+
+[diff]
+  indentHeuristic = true
+  compactionHeuristic = true
+
+[remote]
+  pushDefault = origin
+
+[alias]
+  a = add -A
+  s = switch
+  c = commit
+  cm = commit --message
+  s = status
+  b = branch
+  ca = commit --amend
+  ce = commit --amend --no-edit
+  ace = !git add -A && git commit --amend --no-edit
+	pushf = push --force-with-lease
+  rc = rebase --continue
+  pr = !git-pr
+
+[commit]
+  gpgsign = true
+
+[tag]
+	gpgSign = true
+
+[http "https://gopkg.in"]
+	followRedirects = true
+
+[gpg]
+	program = gpg
+
+[init]
+	defaultBranch = main
+
+# https://github.com/dandavison/delta#installation
+[pager]
+  diff = delta --diff-so-fancy
+  log = delta
+  reflog = delta
+  show = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  features = side-by-side line-numbers decorations
+  whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow ul
+  file-decoration-style = none
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true

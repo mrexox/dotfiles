@@ -1,0 +1,11 @@
+/lefthook-local.yml
+/tags
+/.hack/
+/.help/
+
+.DS_Store
+
+.env.staging
+.env.production
+
+/.claude/settings.local.json

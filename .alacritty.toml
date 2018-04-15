@@ -1,0 +1,116 @@
+live_config_reload = true
+working_directory = "None"
+
+[window]
+decorations = "buttonless"
+opacity = 0.9
+blur = true
+startup_mode = "Maximized"
+option_as_alt = 'Both'
+
+[window.dimensions]
+columns = 120
+lines = 30
+
+[window.padding]
+y = 11
+
+[colors]
+draw_bold_text_with_bright_colors = true
+
+[colors.bright]
+black = "0x666666"
+blue = "0x81a2be"
+cyan = "0x54ced6"
+green = "0x9ec400"
+magenta = "0xb77ee0"
+red = "0xff3334"
+white = "0x282a2e"
+yellow = "0xf0c674"
+
+[colors.cursor]
+cursor = "0xffffff"
+text = "0x1d1f21"
+
+[colors.normal]
+black = "0x1d1f21"
+blue = "0x81a2be"
+cyan = "0x70c0ba"
+green = "0xb5bd68"
+magenta = "0xb294bb"
+red = "0xcc6666"
+white = "0x373b41"
+yellow = "0xe6c547"
+
+[colors.primary]
+background = "0x000000"
+foreground = "#dcdccc"
+
+[cursor]
+style = "Block"
+unfocused_hollow = true
+
+[debug]
+log_level = "Warn"
+persistent_logging = false
+print_events = false
+render_timer = false
+
+[font]
+size = 19
+
+[font.bold]
+family = "FiraCode Nerd Font"
+style = "Retina"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.normal]
+family = "FiraCode Nerd Font"
+style = "Regular"
+
+[font.offset]
+x = 0
+y = 0
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "Paste"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "Copy"
+
+[[keyboard.bindings]]
+action = "ClearLogNotice"
+key = "L"
+mods = "Control"
+
+[[keyboard.bindings]]
+chars = "\f"
+key = "L"
+mods = "Control"
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Shift"
+chars = "\u001B\r"
+
+[mouse]
+hide_when_typing = false
+
+[[mouse.bindings]]
+action = "PasteSelection"
+mouse = "Middle"
+
+[scrolling]
+history = 50000
+
+[selection]
+save_to_clipboard = false
+semantic_escape_chars = ",‚îÇ`|:\"' ()[]{}<>"
+
+[shell]
+program = "/bin/zsh"

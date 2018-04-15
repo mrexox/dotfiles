@@ -1,0 +1,61 @@
+#! /usr/bin/env raku
+
+use v6;
+
+unit sub MAIN(Bool :$dry-run);
+
+sub cmd(Str $raw) of Str
+{
+  run($raw.words, :out).out.slurp(:close).chomp
+}
+
+constant git-root = cmd("git rev-parse --path-format=absolute --show-toplevel");
+
+my (Str $pr-type, Str $issue, Str $name);
+
+# Prepare PR title from branch name.
+#
+# Example:
+#   fix/PRJ-123-add-new-line -> fix: add new line
+#   add-new-line -> add new line
+given cmd("git rev-parse --abbrev-ref HEAD")
+{
+  if / $<pr-type>=(\w+) '/' [ $<issue>=(\w+'-'\d+) '-' $<name>=(.*) | $<name>=(.*) ] /
+  {
+    $pr-type = ~$<pr-type>;
+    $issue = ~$<issue> with $<issue>;
+    $name = ~$<name>;
+  } else {
+    $name = $_;
+  }
+
+  $name = $name.split('-').join(' ');
+};
+
+my $title = ("$pr-type: " if $pr-type) ~ $name;
+
+$issue //= prompt("Issue: ");
+
+# Prepare PR body from existing template.
+
+constant @templates = <
+  /.help/pr_template.md
+  /.github/pull_request_template.md
+>;
+
+my $body = @templates.map({ (git-root ~ $_).IO }).first(*.e).?slurp // q:to/DEFAULT_BODY/;
+### Context
+
+### Changes
+DEFAULT_BODY
+
+$body = "Closes $issue\n\n" ~ $body if $issue;
+
+spurt "/tmp/pr.body", $body;
+
+# Unset GITHUB_TOKEN to avoid token overwrite issues.
+%*ENV<GITHUB_TOKEN> = "";
+
+my &call = do if $dry-run { &say } else { &shell };
+call "gh pr create --draft --body-file=/tmp/pr.body --title='$title'";
+call "gh pr view --web";
