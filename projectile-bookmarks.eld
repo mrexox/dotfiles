@@ -1,0 +1,1 @@
+("~/.emacs.d/" "~/src/lisp/musebox/" "~/src/js/cordova-delight/" "/opt/lampp/htdocs/" "/opt/lampp/htdocs/checkers/" "~/src/js/node-shop-mobile/" "~/src/js/shop/" "~/.emacs.d/rjsx-mode/" "~/proj/real-notifier/")

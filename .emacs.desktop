@@ -1,0 +1,67 @@
+;; -*- mode: emacs-lisp; coding: emacs-mule; -*-
+;; --------------------------------------------------------------------------
+;; Desktop File for Emacs
+;; --------------------------------------------------------------------------
+;; Created Mon Jun 11 13:34:03 2018
+;; Desktop file format version 208
+;; Emacs version 25.3.1
+
+;; Global section:
+(setq desktop-saved-frameset [frameset 1 (23326 31307 845495 984000) (desktop . "208") "ian@asus" nil nil ((((font-backend xft x) (font . "-PfEd-DejaVu Sans Mono-normal-normal-normal-*-16-*-*-*-m-0-iso10646-1") (font-parameter . "DejaVu Sans Mono Book 12") (border-width . 0) (internal-border-width . 0) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#AEC2E0") (background-color . "#14191F") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 8) (right-fringe . 8) (scroll-bar-foreground) (scroll-bar-background) (menu-bar-lines . 0) (tool-bar-lines . 0) (title) (wait-for-wm . t) (tool-bar-position . top) (icon-type . t) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 0) (scroll-bar-height . 0) (alpha) (fullscreen . fullboth) (display-type . color) (background-mode . dark) (cursor-color . "#666666") (environment) (powerline-cache) (frameset--id . "09D8-83AF-6E09-FEC4") (frameset--mini t . t) (modeline . t) (minibuffer . t) (unsplittable) (icon-name) (display . ":0") (explicit-name) (visibility . t) (sticky) (height . 40) (width . 135) (left . 0) (top . 0)) ((min-height . 4) (min-width . 10) (min-height-ignore . 2) (min-width-ignore . 4) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 76) (min-pixel-width . 100) (min-pixel-height-ignore . 38) (min-pixel-width-ignore . 40) (min-pixel-height-safe . 19) (min-pixel-width-safe . 20)) leaf (pixel-width . 1366) (pixel-height . 749) (total-width . 137) (total-height . 39) (normal-height . 1.0) (normal-width . 1.0) (buffer ".emacs" (selected . t) (hscroll . 0) (fringes 8 8 nil) (margins nil) (scroll-bars nil 0 t nil 0 t) (vscroll . 0) (dedicated) (point . 7293) (start . 7066))))])
+(setq desktop-missing-file-warning nil)
+(setq tags-file-name nil)
+(setq tags-table-list nil)
+(setq search-ring '("config" "go" "config" "cursorconfig-type" "config" "go-mode" "theme" "config"))
+(setq regexp-search-ring nil)
+(setq register-alist nil)
+(setq file-name-history '("/home/ian/.config/i3/config.noautostart" "~/.config/i3/config.noautostart" "~/.config/i3/config" "~/.emacs.d/"))
+
+;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 208
+  "/home/ian/.config/i3/config.noautostart"
+  "config.noautostart"
+  'conf-space-mode
+  '(visual-line-mode disable-mouse-global-mode projectile-mode global-auto-revert-mode flycheck-mode linum-mode)
+  6842
+  '(1 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . utf-8-unix) (truncate-lines))
+  '((mark-ring (6910 6750 6731 6704 1))))
+
+(desktop-create-buffer 208
+  "/home/ian/.emacs"
+  ".emacs"
+  'emacs-lisp-mode
+  '(visual-line-mode disable-mouse-global-mode projectile-mode global-auto-revert-mode flycheck-mode)
+  7293
+  '(1174 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . utf-8-unix) (truncate-lines))
+  '((mark-ring (6812 821 1))))
+
+(desktop-create-buffer 208
+  "/home/ian/.config/i3/config"
+  "config"
+  'conf-space-mode
+  '(disable-mouse-global-mode projectile-mode global-auto-revert-mode flycheck-mode)
+  7164
+  '(1 nil)
+  nil
+  nil
+  '((buffer-file-coding-system . utf-8-unix))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "/home/ian/go/src/github.com/red-black-tree/main.go"
+  "main.go"
+  'go-mode
+  '(disable-mouse-global-mode projectile-mode global-auto-revert-mode flycheck-mode)
+  132
+  '(nil nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-file-coding-system . undecided-unix))
+  '((mark-ring nil)))
+
