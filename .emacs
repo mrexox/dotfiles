@@ -1,160 +1,241 @@
-;;; ================================================================================
-;;; Averall Emacs settings:
-;;; Config config config
-;;; ================================================================================
-(require 'ido)
-(ido-mode 1)
-(visual-line-mode 1)
-(set-cursor-color "#666666")
-(desktop-save-mode 1)
-(set-language-environment 'utf-8)
-(set-default-coding-systems 'utf-8)
-(prefer-coding-system 'utf-8)
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono Book 12" ))
-(menu-bar-mode -1)
-;; No scroll-bars and tool-bars
-(when window-system
-  (tool-bar-mode 0)
-  (scroll-bar-mode 0)
-  (custom-set-variables
-   '(initial-frame-alist (quote ((fullscreen . maximized))))))
-;; Startup
-(setq inhibit-splash-screen t)
-(setq inhibit-startup-message t)				; no startup message
-(setq initial-scratch-message
-      ";; Hello, Ian on Arch. Happy hacking!\n\n")
-(setq frame-title-format "%b")					; top line
-(setq-default make-backup-files nil)			; no file~ files
-(display-time)									; time on status panel
-(fset 'yes-or-no-p 'y-or-n-p)
-(setq require-final-newline t)
-(setq default-tab-width 4)
+;;; package --- My .emacs
 
+;;; Code:
 
-
-;;; ---------------------------
-;;; Packages:
-;;; ---------------------------
+(package-initialize)
+;; Requries
+(require 'package)
+(require 'evil)
 (require 'ls-lisp)
+(require 'magit)
+(require 'neotree)
+(require 'multiple-cursors)
+(require 'dockerfile-mode)
+(require 'docker-compose-mode)
+(require 'projectile)
+
+(set-default-font "DejaVu Sans Mono 11")
+(setq clean-buffer-list-delay-general 1)
+(setq inhibit-splash-screen t)
+(setq tags-revert-without-query 1)
+(setq auto-save-default nil)
+(setq tab-width 4)
+(setq-default tab-width 4)
+(setq column-number-mode t)
+(setq frame-title-format
+      (list (format "%s %%S: %%j " (system-name))
+            '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
+(setq backup-directory-alist '(("." . "~/emacs-backups")))
+
+;; NO TABS IN INDENTATION
+(setq-default indent-tabs-mode nil)
+
+;; Ls in dired mode
 (setq ls-lisp-dirs-first t)
 (setq ls-lisp-use-insert-directory-program nil)
 
-(require 'package)
-;; For package repositories
+(fset 'yes-or-no-p 'y-or-n-p)
+
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+
+;; Commands
+(toggle-frame-fullscreen)
+(menu-bar-mode -1)
+(ido-mode)
+(display-time)
+
+;; Hooks
+(defun my-go-mode-hook ()
+  (setq tab-width 4 indent-tabs-mode nil)
+  (linum-mode 1)
+  (add-hook 'before-save-hook 'gofmt-before-save))
+(add-hook 'go-mode-hook 'my-go-mode-hook)
+
+(add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
+(add-hook 'text-mode-hook '(lambda () (font-lock-mode 0)))
+(add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
+(add-hook 'makefile-mode-hook '(lambda () (indent-tabs-mode t)))
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'yaml-mode-hook
+          (lambda ()
+            (flycheck-mode)
+            (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
+(with-eval-after-load 'flycheck
+  (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+
+(use-package gitlab-ci-mode-flycheck
+  :after flycheck gitlab-ci-mode
+  :init
+  (gitlab-ci-mode-flycheck-enable))
+
+
+;; Magit
+(defalias 'blame 'magit-blame)
+(defalias 'b 'blame)
+(defalias 'status 'magit-status)
+(defalias 's 'status)
+(add-hook 'magit-status-mode-hook
+          (lambda () (visual-line-mode 1)))
+
+(setq pretty '(sh c js python perl lisp))
+(add-hook 'makefile-mode-hook (lambda () (linum-mode 1)))
+;; Linum-mode for all files listed in `line-them'
+(dolist (elt pretty)
+  (add-hook (intern (concat (symbol-name elt) "-mode" "-hook"))
+			(lambda()
+			  (linum-mode 1)
+              (setq-default indent-tabs-mode nil))))
+
+;; Perl mode tab is not indenting
+(defun perl-mode-start ()
+  (setq tab-width 4)
+  (highlight-regexp "TODO:\?" 'hi-yellow)
+  (highlight-regexp "FIXME:\?" 'hi-pink)
+  (yas-minor-mode)
+  (setq indent-tabs-mode nil)
+  (local-set-key (kbd "<tab>")
+                 (lambda () (interactive) (insert "    "))))
+(add-hook 'perl-mode-hook 'perl-mode-start)
+
+
+
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
        (proto (if no-ssl "http" "https")))
+  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
-(add-to-list 'load-path "~/.emacs.d/popup-el")
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
-;; Web mode
-(add-to-list 'load-path "~/.emacs.d/web-mode/")
-(require 'web-mode)
+;; Docker-compose mode
+(add-to-list 'auto-mode-alist '("docker-compose\\'" . docker-compose-mode))
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+(add-to-list 'auto-mode-alist '("\\.t\\'" . perl-mode))
 
-(add-to-list 'load-path "~/.emacs.d/haml-mode")
-(require 'haml-mode)
 
-(add-to-list 'load-path "~/.emacs.d/slime")
-(require 'slime-autoloads)
-(setq inferior-lisp-program "/opt/sbcl/bin/sbcl")
+;; Last
+(set-face-bold-p 'bold nil)
+
+(mapc
+ (lambda (face)
+   (set-face-attribute face nil :weight 'normal :underline nil))
+ (face-list))
+
+;; Slime
+(setq inferior-lisp-program "sbcl")
 (setq slime-contribs '(slime-fancy))
-(setq-default lisp-body-indent 2)
-(setq slime-net-coding-system 'utf-8-unix)
-(setq-default lisp-indent-function 'common-lisp-indent-function)
-(slime-setup '(slime-repl
-               slime-fuzzy
-               slime-fancy-inspector
-               slime-indentation))
-(add-to-list 'load-path "~/.emacs.d/neotree")
-(require 'neotree)
 
-(require 'multiple-cursors)
+;; ORG
+(setq org-log-done 'time)
 
-(add-to-list 'load-path "~/.emacs.d/disable-mouse")
-(require 'disable-mouse)
-(global-disable-mouse-mode)
+;; HELM_AG
+(defalias 'agr 'helm-do-ag-project-root)
+(defalias 'ag 'helm-do-ag)
+
+;; ESHELL ALIASES
+(defun eshell/ff (file)
+  (find-file-other-window file))
+
+(defun eshell/f (file)
+  (find-file file))
+
+(defalias 'eshell/l 'eshell/ls)
+(defalias 'eshell/ll 'eshell/ls)
+
+(defun install ()
+  (interactive)
+  (if (call-process-shell-command
+       "cd $(git rev-parse --show-toplevel)/contrib/rdpkg && sudo make install clean"
+       nil "*Shell Command Output*" t)
+      (message "Installed!")
+    (message "Error")))
+
+(defun eshell-new()
+  "Open a new instance of eshell."
+  (interactive)
+  (eshell 'N))
+
+(defun eshell/clear ()
+  "Clear the eshell buffer."
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(defun kill-other-buffers ()
+  "Kill all other buffers."
+  (interactive)
+  (delete-other-windows)
+  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
 
 
+(defun etags ()
+  "Create etags in project directory"
+  (interactive)
+  (tags-reset-tags-tables)
+  (let* ((dir (substring
+               (shell-command-to-string "git rev-parse --show-toplevel")
+               0 -1))
+         (isdir (file-directory-p dir)))
+    (if isdir
+        (shell-command (format
+                        "(cd %s ; find . -regex '.*.[hplmycsxgo]+' -type f | etags -)"
+                        dir))
+      (message "You are not in a git project"))))
 
-;;; ---------------------------
-;;; Modes and hooks:
-;;; ---------------------------
-(defun my-mode-hook ()
-  (linum-mode 1)
-  (setq indent-tabs-mode nil)
-  (setq tab-width 2))
-;; Set auto-fill-mode when text-node is active
-(add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
-(add-hook 'text-mode-hook '(lambda () (font-lock-mode 0)))
-(add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
+(projectile-mode +1)
 
-;; Useful hooks
-(add-hook 'java-mode-hook   'my-mode-hook)
-(add-hook 'perl-mode-hook   'my-mode-hook)
-(add-hook 'python-mode-hook 'my-mode-hook)
-(add-hook 'c-mode-hook      'my-mode-hook)
-(add-hook 'lisp-mode-hook   'my-mode-hook)
-(add-hook 'ruby-mode-hook   'my-mode-hook)
-(add-hook 'css-mode-hook    'my-mode-hook)
-(add-hook 'js-mode-hook     'my-mode-hook)
-
-(setq js-indent-level 2)
-
-(projectile-mode)
-;;; ---------------------------
-;;; Keybindings:
-;;; ---------------------------
-
-(global-set-key (kbd "C-<tab>") 'other-window)
-(global-set-key (kbd "C-c C-e") '(lambda ()
-				  (interactive)
-				  (find-file "~/.emacs")))
+;; Global Set Keys
 (global-set-key (kbd "C-x f") 'projectile-find-file)
-(global-set-key [f8] 'neotree-toggle)
+(global-set-key (kbd "C-x p") 'magit-pull-from-upstream)
+(global-set-key (kbd "C-<tab>") 'other-window)
+(global-set-key (kbd "C-S-<iso-lefttab>") 'other-frame)
+(global-set-key (kbd "C-c C-e") '(lambda () (interactive)
+                                   (find-file "~/.emacs")))
+(global-set-key (kbd "M-e") 'yas-expand)
 (global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key [f8] 'neotree-toggle)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-(global-set-key (kbd "<f5>") 'ian/deploy)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "M-g") 'goto-line)
-(define-key mc/keymap (kbd "C-. M-C-f") 'mc/mark-next-sexps)
-(define-key mc/keymap (kbd "C-. M-C-b") 'mc/mark-previous-sexps)
-(define-key mc/keymap (kbd "C-. <") 'mc/mark-all-above)
-(define-key mc/keymap (kbd "C-. >") 'mc/mark-all-below)
+(global-set-key "\M-g" 'goto-line)
+(global-set-key [f1] 'manual-entry)
+(global-set-key [f2] 'info)
+(global-set-key [f3] 'repeat-complex-command)
+(global-set-key [f4] 'advertised-undo)
+(global-set-key [f5] 'helm-make-projectile)
+(global-set-key [f6] 'kill-other-buffers)
+(global-set-key [f7] 'find-file)
+(global-set-key [f9] 'install)
+(global-set-key [f12] 'next-buffer)
+(global-set-key [f10] 'kill-buffer)
 
-(define-key mc/keymap (kbd "C-. C-d") 'mc/remove-current-cursor)
-(define-key mc/keymap (kbd "C-. C-k") 'mc/remove-cursors-at-eol)
-(define-key mc/keymap (kbd "C-. d")   'mc/remove-duplicated-cursors)
-
-(define-key mc/keymap (kbd "C-. .")   'mc/move-to-column)
-(define-key mc/keymap (kbd "C-. =")   'mc/compare-chars)
-
-;; ;; Go mode
-(require 'go-mode)
-(add-hook 'go-mode-hook
-	  (lambda ()
-	    (add-hook 'before-save-hook 'gofmt-before-save)
-	    (my-mode-hook)))
-;;; ---------------------------
-;;; Other settings
-;;; ---------------------------
-(setq calendar-week-start-day 1
-      calendar-day-name-array ["Вс" "Пн" "Вт" "Ср" "Чт" "Пт" "Сб"]
-      calendar-month-name-array ["Январь" "Февраль" "Март" "Апрель" "Май"
-					  "Июнь" "Июль" "Август" "Сентябрь"
-					  "Октябрь" "Ноябрь" "Декабрь"])
-(setq view-diary-entries-initially t)
-
-(global-auto-revert-mode)
-
+(when window-system
+  (tool-bar-mode 0)
+  (scroll-bar-mode 0)
+  (custom-set-variables
+   '(initial-frame-alist (quote ((fullscreen . maximized)))))
+  ;;  (require 'color-theme-sanityinc-tomorrow)
+  (when (display-graphic-p)
+    (global-hl-line-mode -1)
+    ;;(load-theme 'klere)
+    ;;(color-theme-sanityinc-tomorrow-night)
+    ;;(load-theme 'tango)
+    ;;(load-theme 'bliss)
+    ;;(load-theme 'melancholy)
+    ;;(set-cursor-color "#666666"))
+    ;;(set-foreground-color "#CCCCCC")
+    ;;(set-face-foreground 'linum "#cccccc")
+    ;;(set-border-color "#cccccc")
+    )
+  (server-start))
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -162,38 +243,41 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("addfaf4c6f76ef957189d86b1515e9cf9fcd603ab6da795b82b79830eed0b284" "57fe2bf84d81baecc6d89ed97bdb19936a3052fc2551ca178667fc45feef2381" "1b1e54d9e0b607010937d697556cd5ea66ec9c01e555bb7acea776471da59055" default)))
+    ("7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "59e82a683db7129c0142b4b5a35dbbeaf8e01a4b81588f8c163bd255b76f4d21" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (cyberpunk-theme yaml-mode markdown-mode go-mode sexy-monochrome-theme eyebrowse mc-extras multiple-cursors jsx-mode ## js2-mode slime magit))))
+    (flymake-python-pyflakes hemisu-theme excorporate plsense arc-dark-theme helm-make go-mode ac-etags gitlab-ci-mode-flycheck gitlab-ci-mode ecb use-package shell-pop yasnippet espresso-theme multifiles slime sexy-monochrome-theme ranger projectile powerline persistent-scratch neotree multiple-cursors magit klere-theme jedi-direx helm-ag flymake-perlcritic flycheck-yamllint flycheck-rust flycheck-pycheckers fiplr evil dockerfile-mode docker-compose-mode dired-ranger cyberpunk-theme color-theme cheat-sh bliss-theme bash-completion))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(hl-line ((t (:background "#141918")))))
-
-;; Magit aliases
-(defalias 'blame 'magit-blame)
-(defalias 'b 'blame)
-(defalias 'status 'magit-status)
-(defalias 's 'status)
-
-(server-start)
-
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-
-;; TODO: make it deployc
-(defun ian/deploy ()
-  (interactive)
-  (shell-command "~/Bin/deploy-emacs"))
+ )
+(yas-global-mode)
+(global-hl-line-mode 1)
 
 (load-theme 'cyberpunk)
-(when window-system
-  (set-face-foreground 'fringe "#444")
-  (set-face-background 'fringe "#000")
-  (linum-mode t)
-  (set-face-foreground 'linum "#444")
-  (set-face-background 'linum "#000"))
-(provide '.emacs)
+;;(load-theme 'hemisu-dark)
+(set-foreground-color "#ccc")
+(linum-mode)
+(set-face-foreground 'linum "#666")
+(set-cursor-color "#cccccc")
+;;(set-face-foreground 'dired-directory "#9B1")
+(set-face-background 'fringe "#000")
+(set-face-background 'linum "#000")
+(setenv "PERL5LIB"
+        (concat "/home/ian/src/r/core/src" ":"
+                "/home/ian/perl5/lib/perl5"))
+(require 'flymake-python-pyflakes)
+(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+
+
+(defun sync ()
+  (interactive)
+  (magit-stage-modified)
+  (magit-commit)
+  (magit-push-current-to-upstream))
+
+(global-undo-tree-mode 1)
+(add-hook 'eshell-mode-hook '(lambda () (global-hl-line-mode -1)))
