@@ -5,7 +5,7 @@
 (package-initialize)
 ;; Requries
 (require 'package)
-(require 'evil)
+;;(require 'evil)
 (require 'ls-lisp)
 (require 'magit)
 (require 'neotree)
@@ -41,7 +41,7 @@
 (put 'narrow-to-region 'disabled nil)
 
 ;; Commands
-(toggle-frame-fullscreen)
+;;(toggle-frame-fullscreen)
 (menu-bar-mode -1)
 (ido-mode)
 (display-time)
@@ -64,11 +64,6 @@
             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 (with-eval-after-load 'flycheck
   (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
-
-(use-package gitlab-ci-mode-flycheck
-  :after flycheck gitlab-ci-mode
-  :init
-  (gitlab-ci-mode-flycheck-enable))
 
 
 ;; Magit
@@ -234,6 +229,14 @@
     ;;(set-foreground-color "#CCCCCC")
     ;;(set-face-foreground 'linum "#cccccc")
     ;;(set-border-color "#cccccc")
+    (load-theme 'cyberpunk)
+    (linum-mode)
+    (set-foreground-color "#ccc")
+    (set-face-foreground 'linum "#666")
+    (set-cursor-color "#cccccc")
+    ;;(set-face-foreground 'dired-directory "#9B1")
+    (set-face-background 'fringe "#000")
+    (set-face-background 'linum "#000")
     )
   (server-start))
 (custom-set-variables
@@ -243,7 +246,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "59e82a683db7129c0142b4b5a35dbbeaf8e01a4b81588f8c163bd255b76f4d21" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
+    ("addfaf4c6f76ef957189d86b1515e9cf9fcd603ab6da795b82b79830eed0b284" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "59e82a683db7129c0142b4b5a35dbbeaf8e01a4b81588f8c163bd255b76f4d21" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
@@ -257,15 +260,8 @@
 (yas-global-mode)
 (global-hl-line-mode 1)
 
-(load-theme 'cyberpunk)
 ;;(load-theme 'hemisu-dark)
-(set-foreground-color "#ccc")
-(linum-mode)
-(set-face-foreground 'linum "#666")
-(set-cursor-color "#cccccc")
-;;(set-face-foreground 'dired-directory "#9B1")
-(set-face-background 'fringe "#000")
-(set-face-background 'linum "#000")
+
 (setenv "PERL5LIB"
         (concat "/home/ian/src/r/core/src" ":"
                 "/home/ian/perl5/lib/perl5"))
