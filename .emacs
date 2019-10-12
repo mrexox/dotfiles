@@ -180,7 +180,7 @@
          (isdir (file-directory-p dir)))
     (if isdir
         (shell-command (format
-                        "(cd %s ; find . -regex '.*.[hplmycsxgo]+' -type f | etags -)"
+                        "(cd %s ; find . -regex '.*.[hplmycsxgorb]+' -type f | etags -)"
                         dir))
       (message "You are not in a git project"))))
 
@@ -212,6 +212,24 @@
 (global-set-key [f12] 'next-buffer)
 (global-set-key [f10] 'kill-buffer)
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("addfaf4c6f76ef957189d86b1515e9cf9fcd603ab6da795b82b79830eed0b284" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "59e82a683db7129c0142b4b5a35dbbeaf8e01a4b81588f8c163bd255b76f4d21" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
+ '(initial-frame-alist (quote ((fullscreen . maximized))))
+ '(package-selected-packages
+   (quote
+    (flymake-python-pyflakes hemisu-theme excorporate plsense arc-dark-theme helm-make go-mode ac-etags gitlab-ci-mode-flycheck gitlab-ci-mode ecb use-package shell-pop yasnippet espresso-theme multifiles slime sexy-monochrome-theme ranger projectile powerline persistent-scratch neotree multiple-cursors magit klere-theme jedi-direx helm-ag flymake-perlcritic flycheck-yamllint flycheck-rust flycheck-pycheckers fiplr evil dockerfile-mode docker-compose-mode dired-ranger cyberpunk-theme color-theme cheat-sh bliss-theme bash-completion))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 (when window-system
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
@@ -239,24 +257,7 @@
     (set-face-background 'linum "#000")
     )
   (server-start))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("addfaf4c6f76ef957189d86b1515e9cf9fcd603ab6da795b82b79830eed0b284" "7feeed063855b06836e0262f77f5c6d3f415159a98a9676d549bfeb6c49637c4" "77bd459212c0176bdf63c1904c4ba20fce015f730f0343776a1a14432de80990" "59e82a683db7129c0142b4b5a35dbbeaf8e01a4b81588f8c163bd255b76f4d21" "9527feeeec43970b1d725bdc04e97eb2b03b15be982ac50089ad223d3c6f2920" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" default)))
- '(initial-frame-alist (quote ((fullscreen . maximized))))
- '(package-selected-packages
-   (quote
-    (flymake-python-pyflakes hemisu-theme excorporate plsense arc-dark-theme helm-make go-mode ac-etags gitlab-ci-mode-flycheck gitlab-ci-mode ecb use-package shell-pop yasnippet espresso-theme multifiles slime sexy-monochrome-theme ranger projectile powerline persistent-scratch neotree multiple-cursors magit klere-theme jedi-direx helm-ag flymake-perlcritic flycheck-yamllint flycheck-rust flycheck-pycheckers fiplr evil dockerfile-mode docker-compose-mode dired-ranger cyberpunk-theme color-theme cheat-sh bliss-theme bash-completion))))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
 (yas-global-mode)
 (global-hl-line-mode 1)
 
