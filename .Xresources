@@ -1,0 +1,81 @@
+*Background: black
+*background: black
+*Foreground: gray
+*foreground: gray
+*font: 9x15
+*saveLines: 1000
+*HiForeColor: white
+*HiBackColor: #c06077
+*faceName: Andale Mono
+*faceSize: 13
+*VT100.Translations: #override \
+                 Ctrl Shift <Key>V:    insert-selection(CLIPBOARD) \n\
+                 Ctrl Shift <Key>C:    copy-selection(CLIPBOARD)
+*.vt100.metaSendsEscape: true
+
+*.vt100.locale: true
+*allowBoldFonts:       false
+*metaSendsEscape: true
+*color12: #3333bf
+*color4:  #3465A4
+
+
+!! Colorscheme
+
+! special
+!*.foreground: #93a1a1
+!*.background: #141c21
+*.cursorColor: #afbfbf
+
+! black
+*.color0: #263640
+*.color8: #4a697d
+
+! red
+*.color1: #d12f2c
+*.color9: #fa3935
+
+! green
+*.color2: #819400
+*.color10: #a4bd00
+
+! yellow
+*.color3: #b08500
+*.color11: #d9a400
+
+! blue
+*.color4: #2587cc
+*.color12: #2ca2f5
+
+! magenta
+*.color5: #696ebf
+*.color13: #8086e8
+
+! cyan
+*.color6: #289c93
+*.color14: #33c5ba
+
+! white
+*.color7: #bfbaac
+*.color15: #fdf6e3
+
+!! URxvt Appearance
+URxvt.font: xft:Hack:size=12
+URxvt.boldFont: 
+URxvt.italicFont: xft:Hack:size=12
+URxvt.boldItalicfont:
+URxvt.letterSpace: 0
+URxvt.lineSpace: 0
+!URxvt.geometry: 92x24
+!URxvt.internalBorder: 24
+URxvt.cursorBlink: true
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.depth: 24
+URxvt.iso14755: false
+
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
