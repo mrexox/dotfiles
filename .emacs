@@ -10,13 +10,12 @@
   ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
+
     ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(package-initialize)
+  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-
+(package-initialize)
 ;; defun
 (defun req (package)
   "Require or install a package"
@@ -24,7 +23,7 @@
     (package-install package)))
 
 ;; requires ==================== Requires ==================== requires
-(req 'evil)
+;;(req 'evil)
 (req 'ls-lisp)
 (req 'magit)
 (req 'neotree)
@@ -41,7 +40,7 @@
 (req 'helm-ag)
 (req 'coffee-mode)
 
-(set-default-font "Hack 15")
+(set-default-font "Hack 11")
 (set-face-bold-p 'bold nil)
 (setq org-hide-emphasis-markers t)
 (setq clean-buffer-list-delay-general 1)
@@ -299,7 +298,7 @@
 (setq company-idle-delay 0.6)
 (setq company-show-numbers t)
 
-
+(req 'undo-tree)
 (global-undo-tree-mode 1)
 (add-hook 'eshell-mode-hook '(lambda () (global-hl-line-mode -1)))
 (add-hook 'ruby-mode-hook '(lambda () (linum-mode 1) (yafolding-mode 1)))
