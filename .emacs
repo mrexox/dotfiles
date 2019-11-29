@@ -1,20 +1,8 @@
 ;;; package --- dot.emacs
 
-(package-initialize)
-
 (require 'package)
 
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-
-    ;; For important compatibility libraries like cl-lib
-  (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/")))
-(add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 ;; defun
 (defun req (package)
@@ -72,6 +60,7 @@
 (ido-mode)
 (display-time)
 (projectile-mode +1)
+(windmove-default-keybindings)
 
 ;; hooks ==================== Hooks ==================== hooks
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
@@ -86,6 +75,8 @@
             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 (with-eval-after-load 'flycheck
   (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
+(add-hook 'css-mode-hook '(lambda () (setq tab-width 2)))
+
 
 ;; Perl mode tab is not indenting
 (defun my/perl-mode-hook ()
@@ -248,7 +239,7 @@
  '(initial-frame-alist (quote ((fullscreen . maximized))))
  '(package-selected-packages
    (quote
-    (coffee env-mode company coffee-mode haml-mode evil-visual-mark-mode company-tabnine helm-projectile ag helm-ag dotenv-mode 0blayout flymake-python-pyflakes hemisu-theme excorporate plsense arc-dark-theme helm-make go-mode ac-etags gitlab-ci-mode-flycheck gitlab-ci-mode ecb use-package shell-pop yasnippet espresso-theme multifiles slime sexy-monochrome-theme ranger projectile powerline persistent-scratch neotree multiple-cursors magit klere-theme jedi-direx flymake-perlcritic flycheck-yamllint flycheck-rust flycheck-pycheckers fiplr evil dockerfile-mode docker-compose-mode dired-ranger cyberpunk-theme color-theme cheat-sh bliss-theme bash-completion))))
+    (ztree crystal-mode coffee env-mode company coffee-mode haml-mode evil-visual-mark-mode company-tabnine helm-projectile ag helm-ag dotenv-mode 0blayout flymake-python-pyflakes hemisu-theme excorporate plsense arc-dark-theme helm-make go-mode ac-etags gitlab-ci-mode-flycheck gitlab-ci-mode ecb use-package shell-pop yasnippet espresso-theme multifiles slime sexy-monochrome-theme ranger projectile powerline persistent-scratch neotree multiple-cursors magit klere-theme jedi-direx flymake-perlcritic flycheck-yamllint flycheck-rust flycheck-pycheckers fiplr evil dockerfile-mode docker-compose-mode dired-ranger cyberpunk-theme color-theme cheat-sh bliss-theme bash-completion))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
