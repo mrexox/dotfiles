@@ -11,6 +11,7 @@ set lazyredraw
 set showmatch
 set smartindent
 set autoindent
+set hls
 autocmd BufWritePre * %s/\s\+$//e
 
 set laststatus=2
@@ -25,6 +26,8 @@ if has('gui_running')
 endif
 
 silent! nmap § :NERDTreeToggle<CR>
+silent! nnoremap <S-Left> :bn<CR>
+silent! nnoremap <S-Right> :bp<CR>
 
 
 " Plugins
@@ -45,4 +48,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='onedark'
 
+Plug 'tpope/vim-fugitive'
+cabbrev Gpushf Gpush --force-with-lease
+
+Plug 'romainl/vim-cool'
 call plug#end()
