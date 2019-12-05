@@ -1,0 +1,14 @@
+[user]
+	name = Ian
+	email = mrexox@outlook.com
+
+[alias]
+  a = add -A
+  c = checkout
+  cc = commit
+  s = status
+  b = branch
+  ca = commit --amend
+
+[remote]
+  pushDefault = origin
