@@ -138,7 +138,7 @@
 (add-hook 'go-mode-hook 'my/go-mode-hook)
 
 ;; Magit
-(defalias 'blame 'magit-blame)
+(defalias 'blame 'magit-blame-addition)
 (defalias 'b 'blame)
 (defalias 'status 'magit-status)
 (defalias 's 'status)
