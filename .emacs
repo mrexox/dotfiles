@@ -59,6 +59,9 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
+;; Never keep current tags table
+(setq tags-add-tables nil)
+
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
