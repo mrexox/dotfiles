@@ -26,8 +26,9 @@ if has('gui_running')
 endif
 
 silent! nmap § :NERDTreeToggle<CR>
-silent! nnoremap <S-Left> :bn<CR>
-silent! nnoremap <S-Right> :bp<CR>
+silent! nnoremap <S-Left> :bp<CR>
+silent! nnoremap <S-Right> :bn<CR>
+"silent! nnoremap <C-[> <C-T>
 
 
 " Plugins
@@ -52,4 +53,5 @@ Plug 'tpope/vim-fugitive'
 cabbrev Gpushf Gpush --force-with-lease
 
 Plug 'romainl/vim-cool'
+
 call plug#end()
