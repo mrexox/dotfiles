@@ -27,11 +27,13 @@
 (req 'haml-mode)
 (req 'dotenv-mode)
 (req 'flymake-python-pyflakes)
+(req 'flymake-ruby)
 (req 'helm-ag)
 (req 'coffee-mode)
 (req 'rbenv)
 (req 'web-mode)
 (req 'undo-tree)
+(req 'editorconfig)
 
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
@@ -59,12 +61,15 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; Never keep current tags table
+;; Never keep current tags table. Always open without asking.
 (setq tags-add-tables nil)
+(setq large-file-warning-threshold nil)
 
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
+
+;;; modes
 
 (menu-bar-mode -1)
 (global-prettify-symbols-mode +1)
@@ -76,7 +81,7 @@
 (global-undo-tree-mode 1)
 (yas-global-mode)
 (global-hl-line-mode 1)
-
+(editorconfig-mode 1)
 
 ;;; hooks
 
@@ -99,7 +104,6 @@
           (lambda () (visual-line-mode 1)))
 (add-hook 'makefile-mode-hook (lambda () (linum-mode 1)))
 (add-hook 'eshell-mode-hook '(lambda () (global-hl-line-mode -1)))
-(add-hook 'ruby-mode-hook '(lambda () (linum-mode 1) (yafolding-mode 1)))
 (add-hook 'haml-mode-hook '(lambda () (linum-mode 1) (company-mode 1)))
 (add-hook 'sql-mode-hook '(lambda () (linum-mode 1)))
 (add-hook 'js-mode-hook '(lambda () (linum-mode 1)))
@@ -131,6 +135,8 @@
   (highlight-regexp "#\s\*NOTE:\?" 'hi-yellow)
   (yas-minor-mode)
   (linum-mode 1)
+  (flymake-mode)
+  (rbenv-user-corresponding)
   (yafolding-mode 1))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
 
