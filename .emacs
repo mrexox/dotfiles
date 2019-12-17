@@ -34,6 +34,11 @@
 (req 'web-mode)
 (req 'undo-tree)
 (req 'editorconfig)
+(req 'smart-mode-line)
+
+(setq sml/no-confirm-load-theme t)
+(sml/setup)
+(setq sml/theme 'respectful)
 
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
@@ -195,6 +200,20 @@
 (defalias 'eshell/l 'eshell/ls)
 (defalias 'eshell/ll 'eshell/ls)
 
+;; defuns ==================== Defuns ==================== defuns
+(defun etags ()
+  "Create etags in project directory"
+  (interactive)
+  (let* ((dir (substring
+               (shell-command-to-string "git rev-parse --show-toplevel")
+               0 -1))
+         (isdir (file-directory-p dir)))
+    (if isdir
+        (shell-command
+         (format "(cd %s ; find . -type f -not -path './node_modules/*' | etags -) &"
+                 dir))
+      (message "You are not in a git project"))))
+
 (defun install ()
   (interactive)
   (if (call-process-shell-command
@@ -219,21 +238,6 @@
   (interactive)
   (delete-other-windows)
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
-
-;; defuns ==================== Defuns ==================== defuns
-(defun etags ()
-  "Create etags in project directory"
-  (interactive)
-;;  (tags-reset-tags-tables)
-  (let* ((dir (substring
-               (shell-command-to-string "git rev-parse --show-toplevel")
-               0 -1))
-         (isdir (file-directory-p dir)))
-    (if isdir
-        (shell-command (format
-                        "(cd %s ; find . -type f | etags -) &"
-                        dir))
-      (message "You are not in a git project"))))
 
 (defun now ()
   "Current date"
