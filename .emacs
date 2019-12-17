@@ -207,9 +207,14 @@
   (let* ((dir (substring
                (shell-command-to-string "git rev-parse --show-toplevel")
                0 -1))
-         (isdir (file-directory-p dir)))
+         (isdir (file-directory-p dir))
+         (display-buffer-alist
+          (list
+           (cons
+            "\\*Async Shell Command\\*.*"
+            (cons #'display-buffer-no-window nil)))))
     (if isdir
-        (shell-command
+        (async-shell-command
          (format "(cd %s ; find . -type f -not -path './node_modules/*' | etags -) &"
                  dir))
       (message "You are not in a git project"))))
