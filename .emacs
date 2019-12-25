@@ -12,33 +12,39 @@
   (unless (require package nil t)
     (package-install package)))
 
+(defmacro require-all (&rest packages)
+  "Require all given packages"
+  `(dolist (pkg ',packages)
+     (req pkg)))
+
 ;;; requires
 
-(req 'ls-lisp)
-(req 'magit)
-(req 'neotree)
-(req 'multiple-cursors)
-(req 'dockerfile-mode)
-(req 'docker-compose-mode)
-(req 'projectile)
-(req 'cyberpunk-theme)
-(req 'yasnippet)
-(req 'yafolding)
-(req 'haml-mode)
-(req 'dotenv-mode)
-(req 'flymake-python-pyflakes)
-(req 'flymake-ruby)
-(req 'helm-ag)
-(req 'coffee-mode)
-(req 'rbenv)
-(req 'web-mode)
-(req 'undo-tree)
-(req 'editorconfig)
-(req 'smart-mode-line)
+(require-all
+ ls-lisp
+ magit
+ neotree
+ multiple-cursors
+ dockerfile-mode
+ docker-compose-mode
+ projectile
+ cyberpunk-theme
+ yasnippet
+ yafolding
+ haml-mode
+ dotenv-mode
+ flymake-python-pyflakes
+ flymake-ruby
+ helm-ag
+ coffee-mode
+ rbenv
+ web-mode
+ undo-tree
+ editorconfig
+ smart-mode-line)
 
 (setq sml/no-confirm-load-theme t)
+(setq sml/theme 'dark)
 (sml/setup)
-(setq sml/theme 'respectful)
 
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
@@ -121,6 +127,7 @@
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 
 
 (defun my/perl-mode-hook ()
@@ -200,7 +207,8 @@
 (defalias 'eshell/l 'eshell/ls)
 (defalias 'eshell/ll 'eshell/ls)
 
-;; defuns ==================== Defuns ==================== defuns
+;;; defuns
+
 (defun etags ()
   "Create etags in project directory"
   (interactive)
@@ -243,7 +251,7 @@
   (interactive)
   (delete-other-windows)
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
-
+(defalias 'killo 'kill-other-buffers)
 (defun now ()
   "Current date"
   (format-time-string "%Y-%m-%d"))
