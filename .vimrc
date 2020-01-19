@@ -18,14 +18,14 @@ set laststatus=2
 
 set tags=tags
 
-set guifont=Hack:h16
+set guifont=DejaVu\ Sans\ Mono\ Book\ 12
 set guioptions=
 
 if has('gui_running')
   colorscheme defnoche
 endif
 
-silent! nmap § :NERDTreeToggle<CR>
+silent! nmap <C-n> :NERDTreeToggle<CR>
 silent! nnoremap <S-Left> :bp<CR>
 silent! nnoremap <S-Right> :bn<CR>
 "silent! nnoremap <C-[> <C-T>
