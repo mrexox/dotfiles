@@ -2,6 +2,8 @@
 
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("melpa" ."https://melpa.org/packages/") t)
 (package-initialize)
 
 ;;; defuns
@@ -27,6 +29,7 @@
  docker-compose-mode
  projectile
  helm-projectile
+ helm-xref
  cyberpunk-theme
  yasnippet
  yafolding
