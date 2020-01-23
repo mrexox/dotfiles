@@ -1,8 +1,7 @@
 (require 'package)
 
 (add-to-list 'package-archives
-             '("melpa-stable" . "https://stable.melpa.org/packages/")
-             t)
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (package-initialize)
 
 ;;; defuns
@@ -27,6 +26,7 @@
  dockerfile-mode
  docker-compose-mode
  projectile
+ helm-projectile
  cyberpunk-theme
  yasnippet
  yafolding
@@ -41,6 +41,8 @@
  undo-tree
  editorconfig
  smart-mode-line)
+
+;; settings
 
 (setq sml/no-confirm-load-theme t)
 (setq sml/theme 'dark)
@@ -63,7 +65,6 @@
             '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 (setq backup-directory-alist '(("." . "~/.emacs-backups")))
 
-;; NO TABS IN INDENTATION
 (setq-default indent-tabs-mode nil)
 
 ;; Ls in dired mode
@@ -84,7 +85,8 @@
 
 (menu-bar-mode -1)
 (global-prettify-symbols-mode +1)
-(ido-mode)
+(ido-mode -1)
+(helm-mode)
 (display-time)
 (projectile-mode +1)
 (windmove-default-keybindings)
@@ -148,6 +150,7 @@
   (yas-minor-mode)
   (linum-mode 1)
   (flymake-mode)
+  (flymake-ruby-load)
   (rbenv-user-corresponding)
   (yafolding-mode 1))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
@@ -258,7 +261,8 @@
 
 ;;; global-set-keys
 
-(global-set-key (kbd "C-x f") 'projectile-find-file)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-x f") 'helm-projectile-find-file)
 (global-set-key (kbd "C-x p") 'magit-pull-from-upstream)
 (global-set-key (kbd "C-<tab>") 'other-window)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'other-frame)
@@ -273,6 +277,7 @@
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 (global-set-key (kbd "M-<tab>") 'yafolding-toggle-element)
 (global-set-key "\M-g" 'goto-line)
+(global-set-key "\M-/" 'hippie-expand)
 (global-set-key [f1] 'manual-entry)
 (global-set-key [f2] 'info)
 (global-set-key [f3] 'repeat-complex-command)
