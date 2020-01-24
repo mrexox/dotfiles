@@ -54,7 +54,6 @@
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
 (set-default-font "Hack 16")
-(set-face-bold-p 'bold nil)
 (setq org-hide-emphasis-markers t)
 (setq clean-buffer-list-delay-general 1)
 (setq inhibit-splash-screen t)
@@ -73,7 +72,7 @@
 ;; Ls in dired mode
 (setq ls-lisp-dirs-first t)
 (setq ls-lisp-use-insert-directory-program nil)
-
+(set-face-bold-p 'bold nil)
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; Never keep current tags table. Always open without asking.
@@ -154,7 +153,7 @@
   (linum-mode 1)
   (flymake-mode)
   (flymake-ruby-load)
-  (rbenv-user-corresponding)
+  (rbenv-use-corresponding)
   (yafolding-mode 1))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
 
