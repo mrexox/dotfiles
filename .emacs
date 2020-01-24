@@ -279,7 +279,6 @@
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 (global-set-key (kbd "M-<tab>") 'yafolding-toggle-element)
 (global-set-key "\M-g" 'goto-line)
-(global-set-key "\M-/" 'hippie-expand)
 (global-set-key [f1] 'manual-entry)
 (global-set-key [f2] 'info)
 (global-set-key [f3] 'repeat-complex-command)
