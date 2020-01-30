@@ -61,6 +61,7 @@
 (setq auto-save-default nil)
 (setq tab-width 2)
 (setq-default tab-width 2)
+(setq-default tab-stop-list '(4 8 12 16))
 (setq column-number-mode t)
 (setq frame-title-format
       (list (format "%s %%S: %%j " (system-name))
@@ -162,6 +163,11 @@
   (linum-mode 1)
   (add-hook 'before-save-hook 'gofmt-before-save))
 (add-hook 'go-mode-hook 'my/go-mode-hook)
+
+(defun my/c-mode-hook ()
+  (setq tab-width 4)
+  (linum-mode 1))
+(add-hook 'c-mode-hook 'my/c-mode-hook)
 
 ;; Magit
 (defalias 'blame 'magit-blame-addition)
