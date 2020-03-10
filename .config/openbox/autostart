@@ -19,7 +19,7 @@
 xset -b
 (sleep 1s && nm-applet) &
 (sleep 1s && conky) &
-
-gxkb &
+(sleep 1s && compton -b -c) &
+(sleep 1s && gxkb) &
 
 feh --bg-fill ~/Downloads/wallpaper.jpg
