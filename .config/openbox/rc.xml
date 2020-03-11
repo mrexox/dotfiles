@@ -350,7 +350,7 @@
     </keybind>
     <keybind key="W-p">
       <action name="Execute">
-        <command>rofi -show drun -font "SFNS Display 12" -terminal st</command>
+        <command>rofi -show drun</command>
       </action>
     </keybind>
   </keyboard>
