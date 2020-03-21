@@ -18,14 +18,14 @@ set laststatus=2
 
 set tags=tags
 
-set guifont=DejaVu\ Sans\ Mono\ Book\ 12
+set guifont=Hack:h16
 set guioptions=
 
 if has('gui_running')
   colorscheme defnoche
 endif
 
-silent! nmap <C-n> :NERDTreeToggle<CR>
+silent! nmap § :NERDTreeToggle<CR>
 silent! nnoremap <S-Left> :bp<CR>
 silent! nnoremap <S-Right> :bn<CR>
 "silent! nnoremap <C-[> <C-T>
@@ -47,11 +47,16 @@ nnoremap <C-b> :call gitblame#echo()<CR>
 
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-let g:airline_theme='onedark'
 
 Plug 'tpope/vim-fugitive'
 cabbrev Gpushf Gpush --force-with-lease
 
 Plug 'romainl/vim-cool'
+
+Plug 'dikiaap/minimalist'
+set t_Co=256
+let g:airline_theme='onedark'
+"let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
 call plug#end()
