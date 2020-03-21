@@ -21,6 +21,7 @@ xset -b
 (sleep 1s && conky) &
 (sleep 1s && compton -b -c) &
 (sleep 1s && gxkb) &
+(sleep 1s && polybar example) &
 
 feh --bg-fill ~/Downloads/wallpaper.jpg
 xrdb ~/.Xresources
