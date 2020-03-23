@@ -1,5 +1,5 @@
 syntax enable
-set tabstop=4
+set tabstop=2
 set softtabstop=2
 set expandtab
 set number
@@ -25,11 +25,10 @@ if has('gui_running')
   colorscheme defnoche
 endif
 
-silent! nmap § :NERDTreeToggle<CR>
+silent! map <F2> :NERDTreeToggle<CR>
 silent! nnoremap <S-Left> :bp<CR>
 silent! nnoremap <S-Right> :bn<CR>
 "silent! nnoremap <C-[> <C-T>
-
 
 " Plugins
 call plug#begin('~/.vim/plugged')
