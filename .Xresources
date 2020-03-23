@@ -61,7 +61,7 @@
 
 !! URxvt Appearance
 URxvt.font: xft:Hack:size=12
-URxvt.boldFont: 
+URxvt.boldFont:
 URxvt.italicFont: xft:Hack:size=12
 URxvt.boldItalicfont:
 URxvt.letterSpace: 0
@@ -79,3 +79,7 @@ URxvt.iso14755: false
 
 URxvt.keysym.Shift-Control-V: eval:paste_clipboard
 URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+URxvt.keysym.Control-Up: \033[1;5A
+URxvt.keysym.Control-Down: \033[1;5B
+URxvt.keysym.Control-Left: \033[1;5D
+URxvt.keysym.Control-Right: \033[1;5C
