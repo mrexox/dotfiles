@@ -353,6 +353,18 @@
         <command>rofi -show drun</command>
       </action>
     </keybind>
+    <keybind key="W-Return">
+      <action name="Execute">
+        <command>urxvt</command>
+      </action>
+    </keybind>
+    <keybind key="W-s">
+      <action name="Execute">
+        <command>deepin-screenshot</command>
+      </action>
+    </keybind>
+    <keybind key="W-f">   <action name="ToggleMaximizeFull"/></keybind>
+    <keybind key="W-S-f"> <action name="ToggleMaximizeVert"/></keybind>
     <keybind key="XF86AudioRaiseVolume">
       <action name="Execute">
         <command>pactl set-sink-volume 0 +10%</command>
