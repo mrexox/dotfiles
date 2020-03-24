@@ -28,6 +28,7 @@ if has('gui_running')
 endif
 
 silent! map <F2> :NERDTreeToggle<CR>
+silent! nmap § :NERDTreeToggle<CR>
 silent! nnoremap <S-Left> :bp<CR>
 silent! nnoremap <S-Right> :bn<CR>
 "silent! nnoremap <C-[> <C-T>
