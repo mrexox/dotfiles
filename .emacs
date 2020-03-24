@@ -43,12 +43,13 @@
  web-mode
  undo-tree
  editorconfig
+ slime
+ powerline
  smart-mode-line)
 
 ;; settings
-
 (setq sml/no-confirm-load-theme t)
-(setq sml/theme 'dark)
+(setq sml/theme 'respectful)
 (sml/setup)
 
 (setq custom-file "~/.emacs-custom.el")
@@ -69,7 +70,7 @@
 (setq backup-directory-alist '(("." . "~/.emacs-backups")))
 
 (setq-default indent-tabs-mode nil)
-
+(setq ruby-insert-encoding-magic-comment nil)
 ;; Ls in dired mode
 (setq ls-lisp-dirs-first t)
 (setq ls-lisp-use-insert-directory-program nil)
@@ -85,7 +86,7 @@
 (put 'narrow-to-region 'disabled nil)
 
 ;;; modes
-
+(diminish 'projectile-mode)
 (menu-bar-mode -1)
 (global-prettify-symbols-mode +1)
 (ido-mode -1)
@@ -327,3 +328,8 @@
 
 ;; For evil-mode
 (global-set-key (kbd "§") (kbd "<escape>"))
+
+(when (eq system-type 'darwin)
+  (setq ns-use-srgb-colorspace nil))
+(setq powerline-default-separator 'slant)
+(req 'smart-mode-line-powerline-theme)
