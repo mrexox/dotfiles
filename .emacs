@@ -44,7 +44,6 @@
  undo-tree
  editorconfig
  slime
- powerline
  smart-mode-line)
 
 ;; settings
@@ -154,7 +153,6 @@
   (yas-minor-mode)
   (linum-mode 1)
   (flymake-mode)
-  (flymake-ruby-load)
   (rbenv-use-corresponding)
   (yafolding-mode 1))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
@@ -329,7 +327,4 @@
 ;; For evil-mode
 (global-set-key (kbd "§") (kbd "<escape>"))
 
-(when (eq system-type 'darwin)
-  (setq ns-use-srgb-colorspace nil))
-(setq powerline-default-separator 'slant)
-(req 'smart-mode-line-powerline-theme)
+(set-face-italic 'font-lock-comment-face nil)
