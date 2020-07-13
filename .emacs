@@ -2,11 +2,17 @@
 
 (add-to-list 'package-archives
              '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives
-             '("melpa" ."https://melpa.org/packages/") t)
+
+;; Temporarily removed non-stable repository
+
+;;(add-to-list 'package-archives
+;;             '("melpa" ."https://melpa.org/packages/") t)
+
 (package-initialize)
 
-;;; defuns
+;;;
+;;; .emacs helpers
+;;;
 
 (defun req (package)
   "Require or install a package"
@@ -18,50 +24,60 @@
   `(dolist (pkg ',packages)
      (req pkg)))
 
-;;; requires
+;;;
+;;; Requires
+;;;
 
 (require-all
+
+ ;;
+ ;; Functionality
+ ;;
+
  ls-lisp
  magit
- neotree
  multiple-cursors
- dockerfile-mode
- docker-compose-mode
  projectile
  helm-projectile
  helm-xref
- cyberpunk-theme
  yasnippet
- yafolding
- haml-mode
- dotenv-mode
- flymake-python-pyflakes
- flymake-ruby
- helm-ag
- coffee-mode
  rbenv
- web-mode
  undo-tree
- editorconfig
- slime
- smart-mode-line)
 
-;; settings
+ ;;
+ ;; Look and feel
+ ;;
+
+ smart-mode-line
+ cyberpunk-theme
+
+ ;;
+ ;; File modes
+ ;;
+
+ editorconfig
+ dockerfile-mode
+ dotenv-mode
+ yaml-mode
+ web-mode
+ helm-ag)
+
+;;;
+;;; Settings
+;;;
+
 (setq sml/no-confirm-load-theme t)
-(setq sml/theme 'respectful)
+(setq sml/theme 'dark)
 (sml/setup)
 
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
-(set-default-font "Hack 16")
-(setq org-hide-emphasis-markers t)
-(setq clean-buffer-list-delay-general 1)
+(set-default-font "Hack 11")
+(setq clean-buffer-list-delay-general 1) ; make buffer eligible for killing in 1 day
 (setq inhibit-splash-screen t)
 (setq tags-revert-without-query 1)
 (setq auto-save-default nil)
-(setq tab-width 2)
 (setq-default tab-width 2)
-(setq-default tab-stop-list '(4 8 12 16))
 (setq column-number-mode t)
 (setq frame-title-format
       (list (format "%s %%S: %%j " (system-name))
@@ -69,7 +85,7 @@
 (setq backup-directory-alist '(("." . "~/.emacs-backups")))
 
 (setq-default indent-tabs-mode nil)
-(setq ruby-insert-encoding-magic-comment nil)
+
 ;; Ls in dired mode
 (setq ls-lisp-dirs-first t)
 (setq ls-lisp-use-insert-directory-program nil)
@@ -84,8 +100,10 @@
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
-;;; modes
-(diminish 'projectile-mode)
+;;;
+;;; File-modes
+;;;
+
 (menu-bar-mode -1)
 (global-prettify-symbols-mode +1)
 (ido-mode -1)
@@ -93,13 +111,15 @@
 (display-time)
 (projectile-mode +1)
 (windmove-default-keybindings)
-(global-rbenv-mode)
+;;(global-rbenv-mode)
 (global-undo-tree-mode 1)
 (yas-global-mode)
 (global-hl-line-mode 1)
 (editorconfig-mode 1)
 
-;;; hooks
+;;;
+;;; Hooks
+;;;
 
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
@@ -134,7 +154,6 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 
-
 (defun my/perl-mode-hook ()
   (setq tab-width 4)
   (highlight-regexp "#\s\*TODO:\?" 'hi-yellow)
@@ -153,8 +172,8 @@
   (yas-minor-mode)
   (linum-mode 1)
   (flymake-mode)
-  (rbenv-use-corresponding)
-  (yafolding-mode 1))
+  (flymake-ruby-load)
+  (rbenv-use-corresponding))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
 
 (defun my/go-mode-hook ()
@@ -168,7 +187,10 @@
   (linum-mode 1))
 (add-hook 'c-mode-hook 'my/c-mode-hook)
 
-;; Magit
+;;;
+;;; Magit
+;;;
+
 (defalias 'blame 'magit-blame-addition)
 (defalias 'b 'blame)
 (defalias 'status 'magit-status)
@@ -182,45 +204,54 @@
 			  (linum-mode 1)
         (setq-default indent-tabs-mode nil))))
 
-;; Docker-compose mode
-(add-to-list 'auto-mode-alist '("docker-compose\\'" . docker-compose-mode))
+
+;; Dockerfile mode
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 ;; Perl mode for test files
 (add-to-list 'auto-mode-alist '("\\.t\\'" . perl-mode))
 
-(mapc
- (lambda (face)
-   (set-face-attribute face nil :weight 'normal :underline nil))
- (face-list))
 
 ;; Slime
 (setq inferior-lisp-program "sbcl")
 (setq slime-contribs '(slime-fancy))
 
-;; ORG
-(setq org-log-done 'time)
 
-;; HELM_AG
+;; PATH to ag command
 (add-to-list 'exec-path "/usr/local/bin")
 
+
+;; The silver searcher aliases
 (defalias 'agr 'helm-do-ag-project-root)
 (defalias 'ag 'helm-do-ag)
 
-;; ESHELL ALIASES
+;;;
+;;; Eshell aliases
+;;;
+
+(defalias 'eshell/l 'eshell/ls)
+(defalias 'eshell/ll 'eshell/ls)
+
 (defun eshell/ff (file)
   (find-file-other-window file))
 
 (defun eshell/f (file)
   (find-file file))
 
-(defalias 'eshell/l 'eshell/ls)
-(defalias 'eshell/ll 'eshell/ls)
+(defun eshell/clear ()
+  "Clear the eshell buffer."
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
 
-;;; defuns
+;;;
+;;; Custom functions that can be used via M-x comman
+;;; More elisp examples can be found here:
+;;;              http://ergoemacs.org/emacs/elisp_examples.html
+;;;
 
 (defun etags ()
-  "Create etags in project directory"
+  "Create etags in a git project"
   (interactive)
   (let* ((dir (substring
                (shell-command-to-string "git rev-parse --show-toplevel")
@@ -237,36 +268,39 @@
                  dir))
       (message "You are not in a git project"))))
 
-(defun install ()
-  (interactive)
-  (if (call-process-shell-command
-       "cd $(git rev-parse --show-toplevel)/contrib/rdpkg && sudo make install clean"
-       nil "*Shell Command Output*" t)
-      (message "Installed!")
-    (message "Error")))
-
 (defun eshell-new()
   "Open a new instance of eshell."
   (interactive)
   (eshell 'N))
-
-(defun eshell/clear ()
-  "Clear the eshell buffer."
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
 
 (defun kill-other-buffers ()
   "Kill all other buffers."
   (interactive)
   (delete-other-windows)
   (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
-(defalias 'killo 'kill-other-buffers)
-(defun now ()
-  "Current date"
-  (format-time-string "%Y-%m-%d"))
 
-;;; global-set-keys
+(defalias 'killo 'kill-other-buffers)
+
+(defun today ()
+  "Insert current date under cursor"
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d")))
+
+(defun now ()
+  "Insert current date and time under cursor"
+  (interactive)
+  (insert (format-time-string "%Y-%m-%d-%H%M%S")))
+
+(defun sync ()
+  "Stage all, commit and push to upstream"
+  (interactive)
+  (magit-stage-modified)
+  (magit-commit)
+  (magit-push-current-to-upstream))
+
+;;;
+;;; Keybindings
+;;;
 
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-x f") 'helm-projectile-find-file)
@@ -282,7 +316,6 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-(global-set-key (kbd "M-<tab>") 'yafolding-toggle-element)
 (global-set-key "\M-g" 'goto-line)
 (global-set-key [f1] 'manual-entry)
 (global-set-key [f2] 'info)
@@ -295,6 +328,11 @@
 (global-set-key [f12] 'next-buffer)
 (global-set-key [f10] 'kill-buffer)
 (global-set-key (kbd "C-x v") 'view-mode)
+
+
+;;;
+;;; X-settings for window-system
+;;;
 
 (when window-system
   (tool-bar-mode 0)
@@ -312,19 +350,3 @@
     (set-face-background 'linum "#000")
     )
   (server-start))
-
-(defun sync ()
-  (interactive)
-  (magit-stage-modified)
-  (magit-commit)
-  (magit-push-current-to-upstream))
-
-(req 'company)
-(add-to-list 'company-backends #'company-tabnine)
-(setq company-idle-delay 0.6)
-(setq company-show-numbers t)
-
-;; For evil-mode
-(global-set-key (kbd "§") (kbd "<escape>"))
-
-(set-face-italic 'font-lock-comment-face nil)
