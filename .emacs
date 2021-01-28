@@ -298,6 +298,14 @@
   (magit-commit)
   (magit-push-current-to-upstream))
 
+(defun replace-all (directory from to)
+  "Query replace all occuries in found files"
+  (interactive "DDirectory: \nsReplace string: \nsTo: ")
+  (find-grep-dired directory from)
+  (yes-or-no-p "Process all?")
+  (dired-toggle-marks)
+  (dired-do-query-replace-regexp from to))
+
 ;;;
 ;;; Keybindings
 ;;;
