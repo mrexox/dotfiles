@@ -300,11 +300,11 @@
 
 (defun replace-all (directory from to)
   "Query replace all occuries in found files"
-  (interactive "DDirectory: \nsReplace string: \nsTo: ")
+  (interactive "DDirectory: \nsReplace regexp: \nsTo: ")
   (find-grep-dired directory from)
-  (yes-or-no-p "Process all?")
-  (dired-toggle-marks)
-  (dired-do-query-replace-regexp from to))
+  (when (yes-or-no-p "Start query replace?")
+    (dired-toggle-marks)
+    (dired-do-query-replace-regexp from to)))
 
 ;;;
 ;;; Keybindings
