@@ -1,7 +1,22 @@
 [user]
-	name = Ian
 	email = mrexox@outlook.com
-
+	name = Valentin Kiselev
+[apply]
+  whitespace = nowarn
+[core]
+  whitespace = -indent-with-non-tab,trailing-space,cr-at-eol
+  quotepath = false
+  autocrlf = input
+[merge]
+  summary = true
+  conflictstyle = diff3
+[push]
+  default = current
+[diff]
+  indentHeuristic = true
+  compactionHeuristic = true
+[remote]
+  pushDefault = origin
 [alias]
   a = add -A
   c = checkout
@@ -9,6 +24,3 @@
   s = status
   b = branch
   ca = commit --amend
-
-[remote]
-  pushDefault = origin
