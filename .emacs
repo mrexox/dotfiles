@@ -1,3 +1,9 @@
+;;; DOTEMACS
+
+;; Use C-c C-e for fast editing .emacs
+(global-set-key (kbd "C-c C-e") '(lambda () (interactive)
+                                   (find-file "~/.emacs")))
+
 (require 'package)
 
 (add-to-list 'package-archives
@@ -318,8 +324,6 @@
 (global-set-key (kbd "C-x p") 'magit-pull-from-upstream)
 (global-set-key (kbd "C-<tab>") 'other-window)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'other-frame)
-(global-set-key (kbd "C-c C-e") '(lambda () (interactive)
-                                   (find-file "~/.emacs")))
 (global-set-key (kbd "M-e") 'yas-expand)
 (global-set-key (kbd "C-x g") 'magit-status)
 (global-set-key [f8] 'neotree-toggle)
