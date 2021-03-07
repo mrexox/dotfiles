@@ -5,8 +5,11 @@
 
 ;; Temporarily removed non-stable repository
 
-;;(add-to-list 'package-archives
-;;             '("melpa" ."https://melpa.org/packages/") t)
+(add-to-list 'package-archives
+             '("melpa" ."https://melpa.org/packages/") t)
+
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 
 (package-initialize)
 
@@ -72,7 +75,7 @@
 
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
-(set-default-font "Hack 11")
+(set-frame-font "Monoid 12")
 (setq clean-buffer-list-delay-general 1) ; make buffer eligible for killing in 1 day
 (setq inhibit-splash-screen t)
 (setq tags-revert-without-query 1)
