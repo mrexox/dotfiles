@@ -61,7 +61,7 @@ window:
   #
   # Values for `startup_mode` (macOS only):
   #   - SimpleFullscreen
-  startup_mode: Windowed
+  startup_mode: Maximized
 
   # Window title
   #title: Alacritty
@@ -135,7 +135,7 @@ font:
     #style: Italic
 
   # Point size
-  size: 14.0
+  size: 13.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -368,10 +368,14 @@ live_config_reload: true
 #   - (macOS) /bin/bash --login
 #   - (Linux) user login shell
 #   - (Windows) powershell
-#shell:
-#  program: /bin/bash
-#  args:
-#    - --login
+
+# Uncomment this if having good tmux setup
+# shell:
+#   program: /bin/bash
+#   args:
+#     - --login
+#     - -c
+#     - "tmux"
 
 # Startup directory
 #
@@ -643,4 +647,3 @@ key_bindings:
   - { key: NumpadEnter,             chars: "\n"                              }
   - { key: Space,    mods: Control, chars: "\x10"                            }
     #  - { key: Tab,    mods: Control,                 chars: "\x[...]" }
-
