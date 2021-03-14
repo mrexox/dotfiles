@@ -19,8 +19,8 @@ alias ..='cd ..'
 
 # Git aliases. See: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
 
-alias ggp="git push origin $(current_git_branch)"
-alias ggl="git pull origin $(current_git_branch)"
+alias ggp="git push origin \$(current_git_branch)"
+alias ggl="git pull origin \$(current_git_branch)"
 alias gfa="git fetch --all --prune"
 alias gcb="git checkout -b"
 alias gco="git checkout"
