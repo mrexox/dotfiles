@@ -1,6 +1,7 @@
 [user]
 	email = mrexox@outlook.com
 	name = Valentin Kiselev
+	signingkey = 0x5FB6DBC4E654859B
 [apply]
   whitespace = nowarn
 [core]
@@ -24,3 +25,5 @@
   s = status
   b = branch
   ca = commit --amend
+[commit]
+  gpgsign = true
