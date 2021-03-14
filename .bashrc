@@ -20,10 +20,12 @@ alias ..='cd ..'
 # Git aliases. See: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
 
 alias ggp="git push origin \$(current_git_branch)"
+alias ggpf="git push origin \$(current_git_branch) --force-with-lease"
 alias ggl="git pull origin \$(current_git_branch)"
 alias gfa="git fetch --all --prune"
 alias gcb="git checkout -b"
 alias gco="git checkout"
+alias gcam="git commit -am"
 
 # envs
 
@@ -33,7 +35,7 @@ for path in ${paths[*]}; do
 done
 
 export PS1="\[\033[01;36m\][\u: \w]\[\033[01;33m\]\$(current_git_branch)\[\033[00m\]\[\033[01;36m\] \$ \[\033[00m\]"
-export PS2='... '
+export PS2='🏃‍ '
 
 # Other settings
 
