@@ -115,8 +115,8 @@
 
 (menu-bar-mode -1)
 (global-prettify-symbols-mode +1)
-(ido-mode -1)
-(helm-mode)
+(ido-mode 1)
+;; (helm-mode) ; Not so useful
 (display-time)
 (projectile-mode +1)
 (windmove-default-keybindings)
