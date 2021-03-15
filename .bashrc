@@ -12,6 +12,7 @@ current_git_branch() {
 
 # Aliases
 
+alias ls='ls -G'
 alias s='git status --short'
 alias dc='docker-compose $*'
 alias ll='ls -alF'
@@ -46,3 +47,7 @@ eval "$(rbenv init -)"
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+# gnupg agent for ssh
+gpgconf --launch gpg-agent
+export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
