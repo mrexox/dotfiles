@@ -4,8 +4,8 @@
 
 # these allow you to use ctrl+left/right arrow keys
 # to jump the cursor over words
-"\e[5C": forward-word
-"\e[5D": backward-word
+"\e[1;5C": forward-word   # ctrl + right
+"\e[1;5D": backward-word  # ctrl + left
 
 # these allow you to start typing a command and
 # use the up/down arrow to auto complete from
@@ -31,3 +31,5 @@ set expand-tilde On
 "\e[5~": beginning-of-history
 "\e[6~": end-of-history
 "\e[2~": quoted-insert
+
+
