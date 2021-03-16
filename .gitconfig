@@ -1,5 +1,5 @@
 [user]
-	email = mrexox@outlook.com
+	email = mrexox@evilmartians.com
 	name = Valentin Kiselev
 	signingkey = 0x5FB6DBC4E654859B
 [apply]
@@ -8,6 +8,7 @@
   whitespace = -indent-with-non-tab,trailing-space,cr-at-eol
   quotepath = false
   autocrlf = input
+	excludesFile = ~/.gitignore
 [merge]
   summary = true
   conflictstyle = diff3
@@ -27,3 +28,7 @@
   ca = commit --amend
 [commit]
   gpgsign = true
+[http "https://gopkg.in"]
+	followRedirects = true
+[gpg]
+	program = /usr/local/bin/gpg
