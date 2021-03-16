@@ -132,7 +132,6 @@
 
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
-(add-hook 'text-mode-hook '(lambda () (font-lock-mode 0)))
 (add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
 (add-hook 'makefile-mode-hook '(lambda () (indent-tabs-mode t)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
