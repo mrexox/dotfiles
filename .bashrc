@@ -14,7 +14,7 @@ current_git_branch() {
 
 alias ls='ls -G'
 alias s='git status --short'
-alias dc='docker-compose $*'
+alias dc='docker-compose'
 alias ll='ls -alF'
 alias ..='cd ..'
 
