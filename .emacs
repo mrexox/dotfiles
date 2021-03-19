@@ -81,7 +81,7 @@
 
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
-(set-frame-font "Monoid 12")
+(set-frame-font "Monoid 13")
 (setq clean-buffer-list-delay-general 1) ; make buffer eligible for killing in 1 day
 (setq inhibit-splash-screen t)
 (setq tags-revert-without-query 1)

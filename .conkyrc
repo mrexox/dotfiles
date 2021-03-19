@@ -1,7 +1,10 @@
-out_to_x no
-out_to_console yes
-update_interval 5.0
-total_run_times 0
-use_spacer none
-TEXT
-${addr enp3s0}   Uptime:${uptime_short}   Temp:${acpitemp}C   RAM:$memperc%   CPU:${cpu}%   df:${fs_free /}/${fs_size /} 
+conky.config = {
+ out_to_x = false,
+ out_to_console = true,
+ update_interval = 5.0,
+ total_run_times = 0,
+ use_spacer = none,
+}
+conky.text = [[
+WiFi:${addr wlp2s0}   Uptime:${uptime_short}   Temp:${acpitemp}C   RAM:$memperc%   CPU:${cpu}%   Free (root): ${fs_free /}/${fs_size /}   Battery: ${battery_short}
+]]
