@@ -156,6 +156,7 @@
 (add-hook 'haml-mode-hook '(lambda () (linum-mode 1) (company-mode 1)))
 (add-hook 'sql-mode-hook '(lambda () (linum-mode 1)))
 (add-hook 'js-mode-hook '(lambda () (linum-mode 1)))
+(add-hook 'web-mode-hook '(lambda () (linum-mode 1)))
 (add-hook 'coffee-mode-hook
           (lambda ()
             (set (make-local-variable 'tab-width) 2)
