@@ -74,7 +74,7 @@
 "pactl set-sink-mute 0 toggle"
   XF86AudioMute
 
-"pactl set-source-mute 0 toggle"
+"pactl set-source-mute 1 toggle"
   XF86AudioMicMute
 
 "brightness_up"

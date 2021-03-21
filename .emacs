@@ -52,6 +52,7 @@
  yasnippet
  rbenv
  undo-tree
+ disable-mouse
 
  ;;
  ;; Look and feel
@@ -59,6 +60,7 @@
 
  smart-mode-line
  cyberpunk-theme
+ emojify
 
  ;;
  ;; File modes
@@ -69,7 +71,8 @@
  dotenv-mode
  yaml-mode
  web-mode
- helm-ag)
+ helm-ag
+ go-mode)
 
 ;;;
 ;;; Settings
@@ -94,6 +97,7 @@
 (setq backup-directory-alist '(("." . "~/.emacs-backups")))
 
 (setq-default indent-tabs-mode nil)
+(setq ruby-insert-encoding-magic-comment nil)
 
 ;; Ls in dired mode
 (setq ls-lisp-dirs-first t)
@@ -125,7 +129,8 @@
 (yas-global-mode)
 (global-hl-line-mode 1)
 (editorconfig-mode 1)
-
+(global-disable-mouse-mode)
+(add-hook 'after-init-hook #'global-emojify-mode)
 ;;;
 ;;; Hooks
 ;;;
