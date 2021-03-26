@@ -130,11 +130,15 @@
 (global-hl-line-mode 1)
 (editorconfig-mode 1)
 (global-disable-mouse-mode)
-(add-hook 'after-init-hook #'global-emojify-mode)
+
 ;;;
 ;;; Hooks
 ;;;
 
+(defun linum-mode-hook () (linum-mode 1))
+
+(add-hook 'lisp-mode #'linum-mode-hook)
+(add-hook 'after-init-hook #'global-emojify-mode)
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
 (add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
@@ -143,6 +147,7 @@
 (add-hook 'yaml-mode-hook
           (lambda ()
             (flycheck-mode)
+            (linum-mode-hook)
             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
 (with-eval-after-load 'flycheck
   (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
@@ -151,12 +156,12 @@
           (lambda () (dired-hide-details-mode)))
 (add-hook 'magit-status-mode-hook
           (lambda () (visual-line-mode 1)))
-(add-hook 'makefile-mode-hook (lambda () (linum-mode 1)))
+(add-hook 'makefile-mode-hook #'linum-mode-hook)
 (add-hook 'eshell-mode-hook '(lambda () (global-hl-line-mode -1)))
-(add-hook 'haml-mode-hook '(lambda () (linum-mode 1) (company-mode 1)))
-(add-hook 'sql-mode-hook '(lambda () (linum-mode 1)))
-(add-hook 'js-mode-hook '(lambda () (linum-mode 1)))
-(add-hook 'web-mode-hook '(lambda () (linum-mode 1)))
+(add-hook 'haml-mode-hook '(lambda () (linum-mode-hook) (company-mode 1)))
+(add-hook 'sql-mode-hook #'linum-mode-hook)
+(add-hook 'js-mode-hook #'linum-mode-hook)
+(add-hook 'web-mode-hook #'linum-mode-hook)
 (add-hook 'coffee-mode-hook
           (lambda ()
             (set (make-local-variable 'tab-width) 2)
@@ -180,9 +185,9 @@
 (add-hook 'perl-mode-hook 'my/perl-mode-hook)
 
 (defun my/ruby-mode-hook ()
-  (highlight-regexp "#\s\*TODO:\?" 'hi-yellow)
-  (highlight-regexp "#\s\*FIXME:\?" 'hi-pink)
-  (highlight-regexp "#\s\*NOTE:\?" 'hi-yellow)
+  (highlight-regexp "#\s\*TODO:\?\.\*\$" 'hi-yellow)
+  (highlight-regexp "#\s\*FIXME:\?\.\*\$" 'hi-pink)
+  (highlight-regexp "#\s\*NOTE:\?\.\*\$" 'hi-yellow)
   (yas-minor-mode)
   (linum-mode 1)
   (flymake-mode)
@@ -342,9 +347,8 @@
 (global-set-key [f3] 'repeat-complex-command)
 (global-set-key [f4] 'advertised-undo)
 (global-set-key [f5] 'helm-make-projectile)
-(global-set-key [f6] 'kill-other-buffers)
+(global-set-key [f9] 'kill-other-buffers)
 (global-set-key [f7] 'find-file)
-(global-set-key [f9] 'install)
 (global-set-key [f12] 'next-buffer)
 (global-set-key [f10] 'kill-buffer)
 (global-set-key (kbd "C-x v") 'view-mode)
