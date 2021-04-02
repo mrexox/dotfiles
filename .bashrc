@@ -10,13 +10,27 @@ current_git_branch() {
   [ "$res" != "" ] && echo " $res"
 }
 
+beautiful_git_branch() {
+    current_git_branch | sed -e 's|fix/|🛠️ |' \
+                             -e 's|feature/|⚡|' \
+                             -e 's|chore/|🏠|' \
+			     -Ee 's|([A-Z]+-[0-9]+)-.*|[\1]|'
+}
+
+git-msg() {
+    issue=$(beautiful_git_branch | sed -E 's|[^A-Z]*([A-Z]+-[0-9]+)-(.*)|\1|')
+    msg=$(beautiful_git_branch   | sed -E 's|.*([A-Z]+-[0-9]+)-(.*)|\2|' | sed -e 's|-| |g')
+    echo "[${issue}] ${msg^}"
+}
+
 # Aliases
 
-alias ls='ls -G'
+alias ls='ls --color'
 alias s='git status --short'
 alias dc='docker-compose'
 alias ll='ls -alF'
 alias ..='cd ..'
+alias ec='emacsclient'
 
 # Git aliases. See: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
 
@@ -28,15 +42,22 @@ alias gcb="git checkout -b"
 alias gco="git checkout"
 alias gcam="git commit -am"
 
+alias be='bundle exec'
+
 # envs
 
-paths=( ${HOME}/go/bin $HOME/.rbenv/bin )
+paths=(
+	  ${HOME}/go/bin
+	  ${HOME}/.rbenv/bin
+	  ${HOME}/bin
+)
 for path in ${paths[*]}; do
 	export PATH="${PATH}:${path}"
 done
 
-export PS1="\[\033[01;36m\][\u: \w]\[\033[01;33m\]\$(current_git_branch)\[\033[00m\]\[\033[01;36m\] \$ \[\033[00m\]"
+export PS1="\[\033[01;36m\][\u: \w]\[\033[01;33m\]\$(beautiful_git_branch)\[\033[00m\]\[\033[01;36m\] \$ \[\033[00m\]"
 export PS2='🏃‍ '
+export EDITOR='emacsclient'
 
 # Other settings
 

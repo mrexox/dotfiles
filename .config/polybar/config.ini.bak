@@ -1,11 +1,11 @@
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 ;;
-;;	    ____        __      __              
+;;	    ____        __      __
 ;;	   / __ \____  / /_  __/ /_  ____ ______
 ;;	  / /_/ / __ \/ / / / / __ \/ __ `/ ___/
-;;	 / ____/ /_/ / / /_/ / /_/ / /_/ / /    
-;;	/_/    \____/_/\__, /_.___/\__,_/_/     
-;;	              /____/                    
+;;	 / ____/ /_/ / / /_/ / /_/ / /_/ / /
+;;	/_/    \____/_/\__, /_.___/\__,_/_/
+;;	              /____/
 ;;
 ;; Created By Aditya Shakya @adi1090x
 ;;
@@ -17,7 +17,7 @@
 
 [color]
 
-; Active Shade 
+; Active Shade
 shade1 = #0D47A1
 shade2 = #1565C0
 shade3 = #1976D2
@@ -92,8 +92,8 @@ offset-y = 0%
 background = ${color.bground}
 foreground = ${color.fground}
 
-radius-top = 0.0
-radius-bottom = 0.0
+radius-top = 3.0
+radius-bottom = 3.0
 
 overline-size = 2
 overline-color = ${color.accent}
@@ -105,19 +105,19 @@ padding = 0
 module-margin-left = 0
 module-margin-right = 0
 
-font-0 = "Misc Termsyn:size=12;2"
+font-0 = "Monoid:size=10;2"
 font-1 = "Wuncon Siji:size=12;2"
 font-2 = Iosevka Nerd Font:style=Medium:size=16;3
 
-modules-left = launcher left1 title left2
+modules-left = launcher bspwm 
 modules-center = workspaces
-modules-right = right7 colors right6 alsa right5 battery right4 backlight right3 network right2 date right1 powermenu
+modules-right = right7 filesystem cpu right6 alsa right5 battery right4 backlight right3 network right2 date right1 powermenu
 
 separator =
 spacing = 0
 dim-value = 1.0
-wm-name = 
-locale = 
+wm-name =
+locale =
 
 tray-position = none
 tray-detached = false
@@ -150,6 +150,86 @@ pseudo-transparency = false
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 ;; MODULES
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+[module/bspwm]
+type = internal/bspwm
+
+enable-click = true
+ws-icon-0 = 1
+ws-icon-1 = 2
+ws-icon-2 = 3
+ws-icon-3 = 4
+ws-icon-4 = 5
+ws-icon-5 = 6
+ws-icon-6 = 7
+ws-icon-7 = 8
+ws-icon-8 = 9
+ws-icon-9 = 10
+;ws-icon-default = "WS"
+
+format = <label-state>
+label-monitor = %name%
+
+label-active = %icon% %name%
+
+label-active-foreground = ${color.fground}
+
+label-active-background = ${color.accent}
+
+label-active-underline = ${color.accent}
+
+label-active-padding = 2
+label-focused = %icon% %name%
+label-focused-background = ${color.bground}
+label-focused-underline= ${color.accent}
+label-focused-padding = 2
+label-focused-foreground = ${color.fground}
+
+label-occupied = %icon% %name%
+label-occupied-padding = 2
+label-occupied-background = ${color.bground}
+
+label-urgent = %icon% %name%
+label-urgent-padding = 2
+
+label-empty = 
+label-empty-foreground = ${color.fground}
+label-empty-padding = 2
+label-empty-background = ${color.bground}
+label-monocle = "  "
+label-monocle-foreground = ${color.fground}
+label-tiled = "  "
+label-tiled-foreground = ${color.fground}
+label-fullscreen = "  "
+label-fullscreen-foreground = ${color.fground}
+label-floating = "  "
+label-floating-foreground = ${color.fground}
+label-pseudotiled = "  "
+label-pseudotiled-foreground = ${color.fground}
+label-locked = "  "
+label-locked-foreground = ${color.fground}
+label-sticky = "  "
+label-sticky-foreground = ${color.fground}
+label-private =  "     "
+label-private-foreground = ${color.fground}
+
+; Separator in between workspaces
+;label-separator = |
+;label-separator-padding = 10
+;label-separator-foreground = #ffb52a
+
+format-foreground = ${colors.fground}
+format-background = ${colors.bground}
+
+
+[module/filesystem]
+type = internal/fs
+interval = 60
+mount-0 = /
+spacing = 2
+
+format-mounted-background = ${color.shade3}
+format-mounted-foreground = ${color.modulefg}
+label-mounted = %free% of %total%
 
 [module/left1]
 type = custom/text
@@ -292,7 +372,7 @@ ramp-volume-4 = 
 [module/backlight]
 type = internal/xbacklight
 
-card = intel_backlight
+card = amdgpu_bl0
 
 format = <ramp> <label>
 format-background = ${color.shade4}
@@ -314,10 +394,10 @@ type = internal/battery
 
 full-at = 99
 
-battery = BAT1
-adapter = ACAD
+battery = BAT0
+adapter = AC
 
-poll-interval = 2
+poll-interval = 10
 time-format = %H:%M
 
 format-charging = <animation-charging> <label-charging>
@@ -397,7 +477,7 @@ menu-2-0-exec = systemctl poweroff
 menu-2-1 = back
 menu-2-1-exec = menu-open-0
 
-format-spacing = 1 
+format-spacing = 1
 format-background = ${color.shade1}
 format-foreground = ${color.modulefg}
 format-padding = 1
@@ -410,7 +490,7 @@ label-separator = |
 
 [module/network]
 type = internal/network
-interface = wlp3s0
+interface = wlp2s0
 
 interval = 1.0
 accumulate-stats = true
@@ -449,9 +529,8 @@ click-right = ~/.config/polybar/scripts/type-switch.sh &
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 ;;	    __________  ______
 ;;	   / ____/ __ \/ ____/
-;;	  / __/ / / / / /_    
-;;	 / /___/ /_/ / __/    
-;;	/_____/\____/_/       
+;;	  / __/ / / / / /_
+;;	 / /___/ /_/ / __/
+;;	/_____/\____/_/
 ;;
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-
