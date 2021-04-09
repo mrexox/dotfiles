@@ -53,6 +53,7 @@
  rbenv
  undo-tree
  disable-mouse
+ slime
 
  ;;
  ;; Look and feel
@@ -142,7 +143,6 @@
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
 (add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
-(add-hook 'makefile-mode-hook '(lambda () (indent-tabs-mode t)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 (add-hook 'yaml-mode-hook
           (lambda ()
@@ -157,6 +157,7 @@
 (add-hook 'magit-status-mode-hook
           (lambda () (visual-line-mode 1)))
 (add-hook 'makefile-mode-hook #'linum-mode-hook)
+(add-hook 'makefile-mode-hook #'(lambda () (setq indent-tabs-mode t)))
 (add-hook 'eshell-mode-hook '(lambda () (global-hl-line-mode -1)))
 (add-hook 'haml-mode-hook '(lambda () (linum-mode-hook) (company-mode 1)))
 (add-hook 'sql-mode-hook #'linum-mode-hook)
