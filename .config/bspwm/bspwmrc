@@ -11,6 +11,9 @@ gxkb &
 # Start notifications daemon
 dunst &
 
+# Start picom (compton) compositor
+picom --config /home/ian/.config/picom/picom.conf -b
+
 # Launch polybar
 $HOME/.config/polybar/launch.sh
 
@@ -18,8 +21,12 @@ $HOME/.config/polybar/launch.sh
 
 bspc monitor eDP -d 1 2 3 4 5 6 7 8 9 0
 
-bspc config border_width         0
-bspc config window_gap           2
+bspc config border_width         1
+bspc config window_gap           1
+
+# bspc config normal_border_color  "#808080"
+# bspc config active_border_color  "#4A4A4A"
+# bspc config focused_border_color "#808080"
 
 bspc config single_monocle                false
 bspc config click_to_focus                true
