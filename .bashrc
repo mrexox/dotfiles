@@ -28,9 +28,10 @@ git-msg() {
 alias ls='ls --color'
 alias s='git status --short'
 alias dc='docker-compose'
-alias ll='ls -alF'
+alias ll='nnn -de'
 alias ..='cd ..'
 alias ec='emacsclient'
+alias k='kubectl'
 
 # Git aliases. See: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
 
@@ -57,7 +58,7 @@ done
 
 export PS1="\[\033[01;36m\][\u: \w]\[\033[01;33m\]\$(beautiful_git_branch)\[\033[00m\]\[\033[01;36m\] \$ \[\033[00m\]"
 export PS2='🏃‍ '
-export EDITOR='emacsclient'
+export EDITOR='vim'
 
 # Other settings
 
@@ -72,3 +73,7 @@ export NVM_DIR="$HOME/.nvm"
 # gnupg agent for ssh
 gpgconf --launch gpg-agent
 export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
+
+# nnn plugins
+export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;b:preview-tui'
+export NNN_FIFO=/tmp/nnn.fifo
