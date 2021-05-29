@@ -1,5 +1,7 @@
 ;;; DOTEMACS
 
+(setq visible-cursor 1)
+
 ;; Use C-c C-e for fast editing .emacs
 (global-set-key (kbd "C-c C-e") '(lambda () (interactive)
                                    (find-file "~/.emacs")))
@@ -43,6 +45,7 @@
  ;; Functionality
  ;;
 
+ org-tempo
  ls-lisp
  magit
  multiple-cursors
@@ -73,7 +76,9 @@
  yaml-mode
  web-mode
  helm-ag
- go-mode)
+ go-mode
+ crystal-mode
+ darkroom)
 
 ;;;
 ;;; Settings
@@ -120,8 +125,8 @@
 
 (menu-bar-mode -1)
 (global-prettify-symbols-mode +1)
-(ido-mode 1)
-;; (helm-mode) ; Not so useful
+(ido-mode -1) ; Not very useful
+(helm-mode)
 (display-time)
 (projectile-mode +1)
 (windmove-default-keybindings)
@@ -192,13 +197,15 @@
   (yas-minor-mode)
   (linum-mode 1)
   (flymake-mode)
-  (flymake-ruby-load)
   (rbenv-use-corresponding))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
 
 (defun my/go-mode-hook ()
   (setq tab-width 2)
   (linum-mode 1)
+  (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+  (local-set-key (kbd "C-c i") 'go-goto-imports)
+  (local-set-key (kbd "M-.") 'godef-jump)
   (add-hook 'before-save-hook 'gofmt-before-save))
 (add-hook 'go-mode-hook 'my/go-mode-hook)
 
@@ -215,6 +222,7 @@
 (defalias 'b 'blame)
 (defalias 'status 'magit-status)
 (defalias 's 'status)
+(defalias 'x 'xref-find-references)
 
 (setq pretty '(sh c js python perl lisp))
 ;; Linum-mode for all files listed in `line-them'
@@ -284,7 +292,7 @@
             (cons #'display-buffer-no-window nil)))))
     (if isdir
         (async-shell-command
-         (format "(cd %s ; find . -type f -not -path './node_modules/*' | etags -) &"
+         (format "(cd %s ; find . -type f -name \\*.rb -o -name \\*.js -not -path './node_modules/*' | ctags.emacs -) &"
                  dir))
       (message "You are not in a git project"))))
 
@@ -326,12 +334,17 @@
     (dired-toggle-marks)
     (dired-do-query-replace-regexp from to)))
 
+(defun focus-mode ()
+  "Enable focus-mode for current buffer"
+  (interactive)
+  (darkroom-tentative-mode))
 ;;;
 ;;; Keybindings
 ;;;
 
+(global-set-key (kbd "C-c C-v") 'view-mode)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-x f") 'helm-projectile-find-file)
+(global-set-key (kbd "C-x f") 'projectile-find-file)
 (global-set-key (kbd "C-x p") 'magit-pull-from-upstream)
 (global-set-key (kbd "C-<tab>") 'other-window)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'other-frame)
