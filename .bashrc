@@ -28,10 +28,11 @@ git-msg() {
 alias ls='ls --color'
 alias s='git status --short'
 alias dc='docker-compose'
+alias de='docker-compose exec'
 alias ll='nnn -de'
 alias ..='cd ..'
+alias e='emacsclient -nw'
 alias ec='emacsclient'
-alias k='kubectl'
 
 # Git aliases. See: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
 
@@ -77,3 +78,8 @@ export SSH_AUTH_SOCK=$HOME/.gnupg/S.gpg-agent.ssh
 # nnn plugins
 export NNN_PLUG='f:finder;o:fzopen;p:mocplay;d:diffs;t:nmount;v:imgview;b:preview-tui'
 export NNN_FIFO=/tmp/nnn.fifo
+
+# Kubernetes completions
+source <(kubectl completion bash)
+alias k='kubectl'
+complete -F __start_kubectl k
