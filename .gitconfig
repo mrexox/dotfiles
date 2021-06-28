@@ -31,4 +31,26 @@
 [http "https://gopkg.in"]
 	followRedirects = true
 [gpg]
-	program = /usr/local/bin/gpg
+	program = gpg2
+[init]
+	defaultBranch = main
+
+# https://github.com/dandavison/delta#installation
+[pager]
+  diff = delta
+  log = delta
+  reflog = delta
+  show = delta
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  features = side-by-side line-numbers decorations
+  whitespace-error-style = 22 reverse
+
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold yellow ul
+  file-decoration-style = none
+
