@@ -21,6 +21,9 @@
 
 (package-initialize)
 
+(when (not package-archive-contents)
+  (package-refresh-contents))
+
 ;;;
 ;;; .emacs helpers
 ;;;
@@ -57,6 +60,7 @@
  undo-tree
  disable-mouse
  slime
+ dired-narrow
 
  ;;
  ;; Look and feel
@@ -70,6 +74,7 @@
  ;; File modes
  ;;
 
+ evil
  editorconfig
  dockerfile-mode
  dotenv-mode
@@ -84,12 +89,9 @@
 ;;; Settings
 ;;;
 
-(setq sml/no-confirm-load-theme t)
-(setq sml/theme 'dark)
-(sml/setup)
-
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
+
 (set-frame-font "Monoid 13")
 (setq clean-buffer-list-delay-general 1) ; make buffer eligible for killing in 1 day
 (setq inhibit-splash-screen t)
@@ -133,7 +135,7 @@
 ;;(global-rbenv-mode)
 (global-undo-tree-mode 1)
 (yas-global-mode)
-(global-hl-line-mode 1)
+(global-hl-line-mode -1)
 (editorconfig-mode 1)
 (global-disable-mouse-mode)
 
@@ -158,7 +160,13 @@
   (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
 (add-hook 'css-mode-hook '(lambda () (setq tab-width 2)))
 (add-hook 'dired-mode-hook
-          (lambda () (dired-hide-details-mode)))
+          (lambda ()
+            (dired-hide-details-mode)
+            (define-key dired-mode-map "/" 'dired-narrow)
+            (define-key dired-mode-map "k" 'previous-line)
+            (define-key dired-mode-map "j" 'next-line)
+            (define-key dired-mode-map "h" 'dired-up-directory)
+            (define-key dired-mode-map "l" 'dired-view-file)))
 (add-hook 'magit-status-mode-hook
           (lambda () (visual-line-mode 1)))
 (add-hook 'makefile-mode-hook #'linum-mode-hook)
@@ -195,6 +203,7 @@
   (highlight-regexp "#\s\*FIXME:\?\.\*\$" 'hi-pink)
   (highlight-regexp "#\s\*NOTE:\?\.\*\$" 'hi-yellow)
   (yas-minor-mode)
+  (hl-line-mode 0) ;; temporarily off
   (linum-mode 1)
   (flymake-mode)
   (rbenv-use-corresponding))
@@ -202,6 +211,7 @@
 
 (defun my/go-mode-hook ()
   (setq tab-width 2)
+  (hl-line-mode 0)
   (linum-mode 1)
   (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
   (local-set-key (kbd "C-c i") 'go-goto-imports)
@@ -214,6 +224,13 @@
   (linum-mode 1))
 (add-hook 'c-mode-hook 'my/c-mode-hook)
 
+(add-hook 'view-mode-hook
+          (lambda ()
+            (define-key view-mode-map "j" 'next-line)
+            (define-key view-mode-map "k" 'previous-line)
+            (define-key view-mode-map "l" 'forward-char)
+            (define-key view-mode-map "h" 'backward-char)
+            (define-key view-mode-map "H" 'previous-buffer)))
 ;;;
 ;;; Magit
 ;;;
@@ -292,7 +309,7 @@
             (cons #'display-buffer-no-window nil)))))
     (if isdir
         (async-shell-command
-         (format "(cd %s ; find . -type f -name \\*.rb -o -name \\*.js -not -path './node_modules/*' | ctags.emacs -) &"
+         (format "(cd %s ; find . -type f -name \\*.rb -o -name \\*.js -not -path './node_modules/*' | etags -) &"
                  dir))
       (message "You are not in a git project"))))
 
@@ -338,6 +355,13 @@
   "Enable focus-mode for current buffer"
   (interactive)
   (darkroom-tentative-mode))
+
+(defun msg (&optional b e)
+  "Git branch to commit message"
+  (interactive "r")
+  (replace-string "-" " " nil b e)
+  (capitalize-region b (1+ b)))
+
 ;;;
 ;;; Keybindings
 ;;;
@@ -365,7 +389,6 @@
 (global-set-key [f7] 'find-file)
 (global-set-key [f12] 'next-buffer)
 (global-set-key [f10] 'kill-buffer)
-(global-set-key (kbd "C-x v") 'view-mode)
 
 
 ;;;
@@ -378,6 +401,9 @@
   (custom-set-variables
    '(initial-frame-alist (quote ((fullscreen . maximized)))))
   (when (display-graphic-p)
+    (setq sml/no-confirm-load-theme t)
+    (setq sml/theme 'dark)
+    (sml/setup)
     (global-hl-line-mode -1)
     (load-theme 'cyberpunk)
     (linum-mode)
