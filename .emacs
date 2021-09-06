@@ -61,14 +61,13 @@
  disable-mouse
  slime
  dired-narrow
-
+ flylisp
  ;;
  ;; Look and feel
  ;;
 
  smart-mode-line
  cyberpunk-theme
- emojify
 
  ;;
  ;; File modes
@@ -126,7 +125,7 @@
 ;;;
 
 (menu-bar-mode -1)
-(global-prettify-symbols-mode +1)
+(global-prettify-symbols-mode -1) ; enable if you need ligatures and lambda
 (ido-mode -1) ; Not very useful
 (helm-mode)
 (display-time)
@@ -146,7 +145,6 @@
 (defun linum-mode-hook () (linum-mode 1))
 
 (add-hook 'lisp-mode #'linum-mode-hook)
-(add-hook 'after-init-hook #'global-emojify-mode)
 (add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
 (add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
@@ -184,7 +182,6 @@
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
 
 (defun my/perl-mode-hook ()
@@ -193,10 +190,22 @@
   (highlight-regexp "#\s\*FIXME:\?" 'hi-pink)
   (highlight-regexp "#\s\*NOTE:\?" 'hi-yellow)
   (yas-minor-mode)
-  (setq indent-tabs-mode nil)
-  (local-set-key (kbd "<tab>")
-                 (lambda () (interactive) (insert "    "))))
+  (setq indent-tabs-mode nil))
 (add-hook 'perl-mode-hook 'my/perl-mode-hook)
+
+(defun find-ruby-reference ()
+  "Search for the full class Ruby reference in tags"
+  (interactive)
+  (push-mark (progn
+               (re-search-backward "[^[:alnum:]:_!?]")
+               (forward-char)
+               (while (string-equal (thing-at-point 'char) ":")
+                 (forward-char))
+               (point)))
+  (re-search-forward "\\([^[:alnum:]:_!?]\\|$\\)")
+  (if (not (null (thing-at-point 'char)))
+      (backward-char))
+  (xref-find-definitions (buffer-substring (mark) (point))))
 
 (defun my/ruby-mode-hook ()
   (highlight-regexp "#\s\*TODO:\?\.\*\$" 'hi-yellow)
@@ -206,7 +215,8 @@
   (hl-line-mode 0) ;; temporarily off
   (linum-mode 1)
   (flymake-mode)
-  (rbenv-use-corresponding))
+  (rbenv-use-corresponding)
+  (local-set-key (kbd "M-.") 'find-ruby-reference))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
 
 (defun my/go-mode-hook ()
@@ -322,7 +332,8 @@
   "Kill all other buffers."
   (interactive)
   (delete-other-windows)
-  (mapc 'kill-buffer (delq (current-buffer) (buffer-list))))
+  (mapc 'kill-buffer (delq (get-buffer "*scratch*")
+                           (delq (current-buffer) (buffer-list)))))
 
 (defalias 'killo 'kill-other-buffers)
 
@@ -405,7 +416,7 @@
     (setq sml/theme 'dark)
     (sml/setup)
     (global-hl-line-mode -1)
-    (load-theme 'cyberpunk)
+    (load-theme 'cyberpunk t)
     (linum-mode)
     (set-foreground-color "#ccc")
     (set-face-foreground 'linum "#666")
