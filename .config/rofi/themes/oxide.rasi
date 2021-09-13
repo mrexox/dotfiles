@@ -5,7 +5,8 @@
  * License: MIT
  **/
 * {
-    white:                       rgba ( 247, 247, 247, 100 % );
+    white:                       rgba( 247, 247, 247, 100 % );
+    text-color:                  var(white);
     selected-normal-foreground:  var(lightfg);
     foreground:                  var(white);
     normal-foreground:           var(foreground);

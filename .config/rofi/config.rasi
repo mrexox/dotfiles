@@ -1,9 +1,10 @@
 /* Rofi config file */
 configuration {
-    lines: 5;
-    font: "Monoid 13";
+    lines: 12;
+    font: "Monoid 12";
     show-icons: true;
     theme: "oxide";
+    cycle: false;
     display-window: "Window";
     display-drun: "Search";
 }
