@@ -205,7 +205,10 @@
   (re-search-forward "\\([^[:alnum:]:_!?]\\|$\\)")
   (if (not (null (thing-at-point 'char)))
       (backward-char))
-  (xref-find-definitions (buffer-substring (mark) (point))))
+  (condition-case err
+      (xref-find-definitions (buffer-substring (mark) (point)))
+    (user-error
+     (message ">> %s" (error-message-string err)))))
 
 (defun my/ruby-mode-hook ()
   (highlight-regexp "#\s\*TODO:\?\.\*\$" 'hi-yellow)
