@@ -205,10 +205,18 @@
   (re-search-forward "\\([^[:alnum:]:_!?]\\|$\\)")
   (if (not (null (thing-at-point 'char)))
       (backward-char))
+  (search-ruby-reference (buffer-substring (mark) (point))))
+
+;; Look, how beautiful this code is ;)
+(defun search-ruby-reference (phrase)
   (condition-case err
-      (xref-find-definitions (buffer-substring (mark) (point)))
+      (xref-find-definitions phrase)
     (user-error
-     (message ">> %s" (error-message-string err)))))
+     (if (string-match "::" phrase)
+         (search-ruby-reference
+          (string-join (cdr (split-string phrase "::"))
+                       "::"))
+       (message ">> %s" (error-message-string err))))))
 
 (defun my/ruby-mode-hook ()
   (highlight-regexp "#\s\*TODO:\?\.\*\$" 'hi-yellow)
