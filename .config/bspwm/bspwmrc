@@ -12,7 +12,8 @@ gxkb &
 dunst &
 
 # Start picom (compton) compositor
-picom --config /home/ian/.config/picom/picom.conf -b
+# Commenting: it is using CPU and Memory
+# picom --config /home/ian/.config/picom/picom.conf -b
 
 # Use wallpaper
 feh --bg-fill /home/ian/Pictures/wallpaper.jpg
@@ -23,6 +24,9 @@ $HOME/.config/polybar/launch.sh
 ## CONFIG ##
 
 bspc monitor eDP -d 1 2 3 4 5 6 7 8 9 0
+bspc monitor HDMI-A-0 -d 1 2 3 4 5 6 7 8 9 0
+
+# xrandr --output HDMI-A-0 --mode 1920x1080 --pos 0x0 --rotate normal
 
 bspc config border_width         1
 bspc config window_gap           1
@@ -39,6 +43,9 @@ bspc config gapless_monocle               true
 
 bspc rule -a Emacs desktop='^1' state=fullscreen
 bspc rule -a Chromium desktop='^3' follow=on
-bspc rule -a Slack desktop='^4' state=floating follow=on
-bspc rule -a Bitwarden desktop='^5' state=floating follow=on
+bspc rule -a Slack desktop='^4' state=fullscreen follow=on
+bspc rule -a Bitwarden desktop='^5' rectangle='80x120+40+30' state=floating follow=on
 bspc rule -a zoom desktop='^6' state=floating follow=on
+bspc rule -a Telegram desktop='^7' state=floating follow=on
+bspc rule -a pinentry-qt state=floating follow=on
+
