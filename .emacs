@@ -61,7 +61,7 @@
 ;;
 (display-battery-mode 1)
 (display-time-mode 0)
-(global-hl-line-mode 0)
+(global-hl-line-mode 1)
 (global-prettify-symbols-mode 0) ; enable if you need ligatures and lambda
 (global-subword-mode 1)
 (ido-mode 0) ; Not very useful
@@ -118,6 +118,18 @@
 ;;
 (use-package crystal-mode)
 
+
+;;
+;; js2-mode
+;;
+(use-package js2-mode)
+;;             :hook (js-mode . js2-minor-mode))
+
+(use-package lsp-mode
+  :config
+  (with-eval-after-load 'js
+    (add-hook 'js-mode-hook #'lsp-deferred)
+    (define-key js-mode-map (kbd "M-.") nil)))
 ;;
 ;; cyberpunk-theme
 ;;
@@ -323,13 +335,11 @@
 ;;; Hooks
 ;;;
 
-(add-hook 'lisp-mode #'linum-mode-hook)
-(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
+;;(add-hook 'lisp-mode #'linum-mode-hook)
+;;(add-hook 'python-mode-hook 'flymake-python-pyflakes-load)
 (add-hook 'text-mode-hook '(lambda () (visual-line-mode 1)))
 (add-hook 'diary-mode-hook '(lambda () (auto-fill-mode 1)))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
-(with-eval-after-load 'flycheck
-  (add-hook 'flycheck-mode-hook #'flycheck-pycheckers-setup))
 (add-hook 'css-mode-hook '(lambda () (setq tab-width 2)))
 (add-hook 'dired-mode-hook
           (lambda ()
@@ -342,9 +352,7 @@
 (add-hook 'makefile-mode-hook #'linum-mode-hook)
 (add-hook 'makefile-mode-hook #'(lambda () (setq indent-tabs-mode t)))
 (add-hook 'eshell-mode-hook '(lambda () (global-hl-line-mode -1)))
-(add-hook 'haml-mode-hook '(lambda () (linum-mode-hook) (company-mode 1)))
-(add-hook 'sql-mode-hook #'linum-mode-hook)
-(add-hook 'js-mode-hook #'linum-mode-hook)
+;;(add-hook 'haml-mode-hook '(lambda () (linum-mode-hook) (company-mode 1)))
 
 (add-hook 'web-mode-hook #'linum-mode-hook)
 (add-hook 'coffee-mode-hook
@@ -469,7 +477,7 @@
             (cons #'display-buffer-no-window nil)))))
     (if isdir
         (async-shell-command
-         (format "(cd %s ; find . -type f -name \\*.rb -o -name \\*.js -not -path './node_modules/*' | etags -) &"
+         (format "(cd %s ; find . -type f -name '*.rb' -o -name '*.js' -not -path './*/node_modules/*' | etags -) &"
                  dir))
       (message "You are not in a git project"))))
 
@@ -522,5 +530,18 @@
   (interactive "r")
   (replace-string "-" " " nil b e)
   (capitalize-region b (1+ b)))
+
+(defun camelize (begin end)
+  "Convert under_score string S to CamelCase string."
+  (interactive "r")
+  (let ((str (buffer-substring begin end)))
+    (replace-string str
+                    (mapconcat 'identity
+                               (mapcar
+                                '(lambda (word) (capitalize (downcase word)))
+                                (split-string str "_")) "")
+                    nil
+                    begin
+                    end)))
 
 (cd "~/")
