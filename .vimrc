@@ -15,14 +15,16 @@ set lazyredraw
 set showmatch
 set smartindent
 set autoindent
+set autoread
 set hls
+set paste "disable if no identation works
 autocmd BufWritePre * %s/\s\+$//e
 
 set laststatus=2
 
 set tags=tags
 
-set guifont=Hack:h16
+set guifont=Monoid:16
 set guioptions=
 
 if has('gui_running')
