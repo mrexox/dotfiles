@@ -16,10 +16,13 @@ dunst &
 # picom --config /home/ian/.config/picom/picom.conf -b
 
 # Use wallpaper
-feh --bg-fill /home/ian/Pictures/wallpaper.jpg
+feh --bg-fill /home/ian/Pictures/wallpaper.png
 
 # Launch polybar
-$HOME/.config/polybar/launch.sh
+#$HOME/.config/polybar/launch.sh
+
+# Launch Tint2
+tint2 &
 
 ## CONFIG ##
 
@@ -41,10 +44,13 @@ bspc config split_ratio                   0.50
 bspc config borderless_monocle            true
 bspc config gapless_monocle               true
 
+# use: xprop | grep WM_CLASS
 bspc rule -a Emacs desktop='^1' state=fullscreen
 bspc rule -a Chromium desktop='^3' follow=on
-bspc rule -a Slack desktop='^4' state=fullscreen follow=on
-bspc rule -a Bitwarden desktop='^5' rectangle='80x120+40+30' state=floating follow=on
+bspc rule -a Slack desktop='^4' state=tiled follow=on
+bspc rule -a Bitwarden desktop='^5' rectangle='1000x800+200+100' state=floating follow=on
+bspc rule -a Keybase desktop='^5' rectangle='1000x800+400+130' state=floating follow=on
+bspc rule -a 1Password desktop='^5' rectangle='1000x800+600+160' state=floating follow=on
 bspc rule -a zoom desktop='^6' state=floating follow=on
 bspc rule -a Telegram desktop='^7' state=floating follow=on
 bspc rule -a pinentry-qt state=floating follow=on

@@ -8,7 +8,7 @@ super + Return
 
 # program launcher
 super + p
-	rofi -show run -lines 5 -padding 300 -location 2
+	rofi -show drun -lines 5 -padding 300 -location 2
 
 # make sxhkd reload its configuration files:
 super + Escape
@@ -16,7 +16,7 @@ super + Escape
 
 # screenshots
 super + shift + s
-	deepin-screenshot
+	deepin-screen-recorder
 
 super + shift + Delete
 	i3lock-fancy
@@ -144,3 +144,14 @@ super + alt + shift + {h,j,k,l}
 # move a floating window
 super + {Left,Down,Up,Right}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+# dunst
+
+super + n
+  dunstctl history-pop
+
+super + shift + n
+  dunstctl close
+
+super + ctrl + n
+  dunstctl set-paused toggle

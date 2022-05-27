@@ -1,9 +1,11 @@
 /* Rofi config file */
+
+@theme "oxide"
+
 configuration {
     lines: 12;
     font: "Monoid 12";
     show-icons: true;
-    theme: "oxide";
     cycle: false;
     display-window: "Window";
     display-drun: "Search";
