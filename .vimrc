@@ -24,7 +24,7 @@ set laststatus=2
 
 set tags=tags
 
-set guifont=Monoid:16
+set guifont=Monoid:h8
 set guioptions=
 
 if has('gui_running')

@@ -54,7 +54,8 @@
  ruby-insert-encoding-magic-comment nil
  tags-add-tables nil ; never keep current tags table; always open without asking.
  tags-revert-without-query 1
- visible-cursor 1)
+ visible-cursor 1
+ initial-scratch-message "\n\n\n")
 
 ;;
 ;; Modes
@@ -124,6 +125,7 @@
 ;;
 (use-package js2-mode)
 ;;             :hook (js-mode . js2-minor-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . js-mode))
 
 (use-package lsp-mode
   :config
@@ -155,7 +157,7 @@
 ;;
 (use-package disable-mouse
              :config (global-disable-mouse-mode 1))
-
+(global-disable-mouse-mode)
 ;;
 ;; dockerfile-mode
 ;;
@@ -227,9 +229,6 @@
   (visual-line-mode 1))
 
 (use-package magit
-             :hook ((magit-status-mode-hook . my/magit-status-mode-hook))
-             :bind (("C-x p" . magit-pull-from-upstream)
-                    ("C-x g" . magit-status))
              :config
              (defalias 'blame 'magit-blame-addition)
              (defalias 'b 'blame)
@@ -296,7 +295,6 @@
 ;; web-mode
 ;;
 
-;; (add-to-list 'auto-mode-alist '("\\.ts\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
@@ -304,8 +302,7 @@
 (use-package web-mode
              :mode "\\.vue\\'"
              :mode "\\.css?\\'"
-             :mode "\\.html?\\'"
-             :mode "\\.ts\\'")
+             :mode "\\.html?\\'")
 
 ;;
 ;; yaml-mode
@@ -354,7 +351,10 @@
 (add-hook 'eshell-mode-hook '(lambda () (global-hl-line-mode -1)))
 ;;(add-hook 'haml-mode-hook '(lambda () (linum-mode-hook) (company-mode 1)))
 
-(add-hook 'web-mode-hook #'linum-mode-hook)
+(add-hook 'web-mode-hook (lambda ()
+                           (linum-mode-hook)
+                           (set (make-local-variable 'tab-width) 2)))
+
 (add-hook 'coffee-mode-hook
           (lambda ()
             (set (make-local-variable 'tab-width) 2)
