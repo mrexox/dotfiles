@@ -16,7 +16,10 @@ super + Escape
 
 # screenshots
 super + shift + s
-	deepin-screen-recorder
+	flameshot gui
+
+super + shift + a
+	deeping-screen-recorder
 
 super + shift + Delete
 	i3lock-fancy
@@ -34,10 +37,10 @@ XF86AudioMicMute
   pactl set-source-mute 1 toggle
 
 XF86MonBrightnessUp
-  brightnessctl up
+  doas brightness_up
 
 XF86MonBrightnessDown
-  brightnessctl down
+  doas brightness_down
 
 #
 # bspwm hotkeys
