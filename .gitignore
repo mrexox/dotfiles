@@ -1,3 +1,9 @@
 TAGS
+tags
 node_modules/
-__dev/
+__dev__/
+
+*.org
+.log/
+
+lefthook-local.yml
