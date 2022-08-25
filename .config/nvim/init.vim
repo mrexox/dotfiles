@@ -44,25 +44,24 @@ set guioptions=
 
 if has('gui_running')
   colorscheme defnoche
-	set t_Co=8 t_md=
+  set t_Co=8 t_md=
 endif
 
 " useful mappings
 silent! nnoremap <leader>o :only<CR>
 silent! nnoremap <leader>i :e ~/.config/nvim/init.vim<Cr>
-silent! nnoremap <leader>dd :Lexplore %:p:h<Cr>
-silent! nnoremap <leader>da :Lexplore<Cr>
 silent! nnoremap <S-Left> :bp<CR>
 silent! nnoremap <S-Right> :bn<CR>
 silent! nnoremap _ :bp<CR>
 silent! nnoremap + :bn<CR>
 silent! nnoremap \| :bd<CR>
 
+
+" netrw
 let g:netrw_winsize = 25
 let g:netrw_banner = 0
 let g:netrw_browse_split = 1
-
-" netrw
+" silent! nnoremap <leader>d :Lexplore %:p:h<Cr>
 function! NetrwMapping()
   nmap <buffer> H u
   nmap <buffer> h -^
@@ -71,9 +70,11 @@ function! NetrwMapping()
   nmap <buffer> . gh
   nmap <buffer> P <C-w>z
   nmap <buffer> o <CR>:only<CR>
+  nmap <buffer> q :q<CR>
 
   nmap <buffer> L <CR>:Lexplore<CR>
   nmap <buffer> <leader>dd :Lexplore<CR>
+  nmap <buffer> cd :cd %<Cr>
 endfunction
 
 augroup netrw_mapping
@@ -102,12 +103,14 @@ Plug 'chrisbra/vim-diff-enhanced'
 Plug 'tpope/vim-commentary' " For Commenting gcc & gc
 " Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 
+Plug 'kyazdani42/nvim-tree.lua'
 call plug#end()
 
 let g:blamer_enabled = 1
 let g:blamer_date_format = '%d/%m/%y'
-let g:blamer_delay = 2000
-highlight Blamer ctermfg=darkgray
+let g:blamer_delay = 500
+highlight Blamer ctermfg=darkgray guifg=darkgray
+silent! nnoremap <leader>b :BlamerToggle<Cr>
 
 " 'neovim/nvim-lspconfig'
 lua <<END
@@ -122,40 +125,40 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
 local on_attach = function(client, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+-- Enable completion triggered by <c-x><c-o>
+vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-  vim.keymap.set('n', '<space>wl', function()
-    print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-  end, bufopts)
-  vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-  vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-  vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
+-- Mappings.
+-- See `:help vim.lsp.*` for documentation on any of the below functions
+local bufopts = { noremap=true, silent=true, buffer=bufnr }
+vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+vim.keymap.set('n', '<space>wl', function()
+print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+end, bufopts)
+vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
 end
 
 local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
-}
+  }
 require('lspconfig')['pyright'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
+on_attach = on_attach,
+flags = lsp_flags,
 }
 require('lspconfig')['tsserver'].setup{
-    on_attach = on_attach,
-    flags = lsp_flags,
+on_attach = on_attach,
+flags = lsp_flags,
 }
 END
 set t_Co=256
@@ -187,6 +190,44 @@ let g:startify_bookmarks = systemlist("cut -sd' ' -f 2- ~/.NERDTreeBookmarks")
 
 " 'TimUntersberger/neogit'
 silent! nnoremap <C-x>g :Neogit<CR>
+silent! nnoremap <leader>g :Neogit<CR>
+
+" vim-tree
+lua <<END
+require("nvim-tree").setup({
+view = {
+  adaptive_size = true,
+  mappings = {
+    list = {
+      { key = "h", action = "dir_up" },
+      { key = "l", action = "edit" },
+      },
+    },
+  },
+actions = {
+  change_dir = {
+    enable = true,
+    global = true,
+    },
+  },
+renderer = {
+  indent_markers = {
+    enable = false
+    },
+  icons = {
+    webdev_colors =  false,
+    show = {
+      file = false,
+      folder = false,
+      folder_arrow = false,
+      git = false,
+      }
+    }
+  }
+})
+END
+silent! nnoremap <leader>d :NvimTreeToggle<Cr>
+silent! nnoremap <leader>w :NvimTreeToggle %:p:h<Cr>
 
 if exists("g:neovide")
   let g:neovide_refresh_rate=30
