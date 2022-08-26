@@ -1,0 +1,113 @@
+#!/usr/bin/env perl
+
+use 5.010;
+use strict;
+use warnings;
+
+use Getopt::Long;
+
+use constant {
+    BRANCH_TYPES => {
+        fix   => ':wrench:',
+        chore => ':broom:',
+    },
+};
+
+my $Dry_run = 0;
+GetOptions(
+    'dry-run' => \$Dry_run,
+    'priority=i' => \my $Priority,
+    'risk=i' => \my $Risk,
+);
+
+if ($Dry_run) {
+    # For debugging
+    say &title;
+    say &body;
+} else {
+    &create_pr;
+}
+
+# ------------------------------------
+
+#
+# Get current branch information
+#
+# {
+#   full => 'feature/super-branch',
+#   type => 'feature',
+#   description => 'super-branch',
+# }
+#
+sub git_branch {
+    state $output = `git rev-parse --abbrev-ref HEAD 2>/dev/null`;
+    chomp($output);
+
+    $output =~ m/(\w+)\/(.*)/;
+    my ($type, $description) = ($1, $2);
+
+    if (defined $description) {
+        $description =~ s/-/ /g;
+        $description = ucfirst($description);
+    }
+
+    return {
+        full => $output,
+        type => $type,
+        description => $description,
+    };
+}
+
+sub title {
+    my $info = &git_branch;
+
+    if (defined $info->{description}) {
+        return $info->{description};
+    } else {
+        return ucfirst($info->{full});
+    }
+}
+
+sub issue_type {
+    my $info = &git_branch;
+
+    return ':zap:' unless defined $info->{type};
+
+    BRANCH_TYPES->{$info->{type}} || ':zap:';
+}
+
+# Remove starting and trailing whitespaces
+sub trim { my ($str) = @_; $str =~ s/^\s+|\s+$//; $str; }
+
+sub body {
+    my $info = &git_branch;
+    my $issue_type = &issue_type;
+
+    print 'Issue: ';
+    my $issue = <>;
+    chomp($issue);
+
+    my @lines;
+
+    if ($issue) {
+        push @lines, "Closes ${issue}"
+    }
+
+    # PR common template
+    push @lines, <<~EOF;
+
+    **Summary ${issue_type}**
+
+    EOF
+
+    trim(join("\n", @lines));
+}
+
+sub create_pr {
+    my ($title, $body) = (&title, &body);
+
+    system("GITHUB_TOKEN= gh pr create --draft --body='${body}' --title='${title}'");
+    say 'Opening PR in a second...';
+    sleep 1;
+    exec("gh pr view --web")
+}

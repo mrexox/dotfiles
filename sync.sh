@@ -7,3 +7,4 @@ cp ~/.emacs .emacs
 cp ~/.vimrc .vimrc
 cp ~/.gitignore .gitignore
 cp ~/.gitconfig .gitconfig
+cp ~/bin/git-pr bin/
