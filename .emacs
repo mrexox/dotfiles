@@ -4,18 +4,14 @@
 
 ;;; Code:
 
-;;
 ;; Global variables
-;;
 (defvar my/font "Monoid 13")
 (defvar my/title-format
   (list
    (format "%s %%S: %%j " (system-name))
    '(buffer-file-name "%f" (dired-directory dired-directory "%b"))))
 
-;;
 ;; Window system settings
-;;
 (when window-system
   (tool-bar-mode 0)
   (scroll-bar-mode 0)
@@ -32,9 +28,7 @@
 (global-set-key "\M-g" 'goto-line)
 (global-set-key [f9] 'kill-other-buffers)
 
-;;
 ;; Set the preferred preferences
-;;
 (setq-default
  tab-width 2
  indent-tabs-mode nil
@@ -57,10 +51,8 @@
  visible-cursor 1
  initial-scratch-message "\n\n\n")
 
-;;
 ;; Modes
-;;
-(display-battery-mode 1)
+(display-battery-mode 0)
 (display-time-mode 0)
 (global-hl-line-mode 1)
 (global-prettify-symbols-mode 0) ; enable if you need ligatures and lambda
@@ -70,9 +62,7 @@
 (menu-bar-mode 0)
 (windmove-default-keybindings)
 
-;;
 ;; Goodies
-;;
 (add-to-list 'exec-path "/usr/local/bin")
 (fset 'yes-or-no-p 'y-or-n-p)
 (mouse-avoidance-mode 'banish)
@@ -84,110 +74,154 @@
 (mapc (lambda (face) (set-face-attribute face nil :weight 'normal :underline nil))
       (face-list))
 
-;;
 ;; Load custom file
-;;
 (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;;
 ;; Load secret file
-;;
 (let ((secret.el (expand-file-name ".secret.el" user-emacs-directory)))
   (when (file-exists-p secret.el)
-  (load secret.el)))
+    (load secret.el)))
 
-;;
 ;; Packages
-;;
 (require 'package)
 (add-to-list 'package-archives '("melpa" ."https://melpa.org/packages/") t)
 (package-initialize)
 
-;;
 ;; 'use-package' configuration
-;;
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;;
-;; crystal-mode
-;;
 (use-package crystal-mode)
 
-
-;;
-;; js2-mode
-;;
-(use-package js2-mode)
-;;             :hook (js-mode . js2-minor-mode))
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . js-mode))
+(use-package typescript-mode
+  :mode "\\.ts\\'"
+  :hook ((typescript-mode . lsp-deferred)
+         (typescript-mode . linum-mode))
+  :config
+  (setq typescript-indent-level 2))
 
 (use-package lsp-mode
-  :config
-  (with-eval-after-load 'js
-    (add-hook 'js-mode-hook #'lsp-deferred)
-    (define-key js-mode-map (kbd "M-.") nil)))
-;;
-;; cyberpunk-theme
-;;
-(use-package cyberpunk-theme
-             :config
-             (when (display-graphic-p)
-               (load-theme 'cyberpunk t)
-               (set-foreground-color "#ccc")
-               (set-face-background hl-line-face "gray4")
-               (linum-mode 1)
-               (set-face-foreground 'linum "#666")
-               (set-face-background 'linum "#000")
-               (set-cursor-color "#cccccc")
-               (set-face-background 'fringe "#000")))
+  :after typescript-mode js
+  :hook ((js-mode . lsp-deferred)
+         (typescript-mode . lsp-deferred)))
 
-;;
-;; darkroom
-;;
+(use-package lsp-ivy
+  :after lsp ivy)
+
+(use-package anzu
+  :config
+  (global-anzu-mode 1)
+  (global-set-key (kbd "M-r") 'anzu-replace-at-cursor-thing)
+  (defalias 'replace 'anzu-query-replace-regexp))
+
+;; Color scheme
+(use-package cyberpunk-theme
+  :config
+  (when (display-graphic-p)
+    (load-theme 'cyberpunk t)
+    (set-foreground-color "#ccc")
+    (set-face-background hl-line-face "gray4")
+    (linum-mode 1)
+    (set-face-foreground 'linum "#666")
+    (set-face-background 'linum "#000")
+    (set-cursor-color "#cccccc")
+    (set-face-background 'fringe "#000")))
+
+(use-package diminish
+  :config (diminish 'projectile-mode))
+
+(use-package ivy
+  :config
+  (ivy-mode 1)
+  ;; add ‘recentf-mode’ and bookmarks to ‘ivy-switch-buffer’.
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  ;; number of result lines to display
+  (setq ivy-height 8)
+  ;; does not count candidates
+  (setq ivy-count-format "(%d/%d) ")
+  ;; no regexp by default
+  (setq ivy-initial-inputs-alist nil)
+  ;; configure regexp engine.
+  (setq ivy-re-builders-alist
+	      ;; allow input not in order
+        '((t   . ivy--regex-ignore-order))))
+
+(use-package ivy-rich
+  :after ivy
+  :custom
+  (ivy-virtual-abbreviate 'full
+                          ivy-rich-switch-buffer-align-virtual-buffer t
+                          ivy-rich-path-style 'abbrev)
+  :config
+  (ivy-set-display-transformer 'ivy-switch-buffer
+                               'ivy-rich-switch-buffer-transformer)
+  (ivy-rich-mode 1)) ;; this gets us descriptions in M-x.
+
+(use-package counsel
+  :after ivy
+  :config (counsel-mode))
+
+(use-package counsel-ag-popup
+  :after counsel
+  :config
+  (defun agw ()
+    (interactive)
+    (let ((dir (substring
+                (shell-command-to-string "git rev-parse --show-toplevel")
+                0 -1))
+          (word (thing-at-point 'symbol)))
+        (counsel-ag-popup-search dir word)))
+  (defun agr (&optional string)
+    (interactive)
+    (let ((dir (substring
+                (shell-command-to-string "git rev-parse --show-toplevel")
+                0 -1)))
+        (counsel-ag-popup-search dir string)))
+  (defalias 'ag 'counsel-ag-popup-search-here)
+  (global-set-key (kbd "C-c C-s") 'agw))
+
+(use-package swiper
+  :after ivy
+  :config
+  (global-set-key (kbd "M-s") 'swiper-thing-at-point))
+
 (use-package darkroom)
 
-;;
-;; disable-mouse
-;;
 (use-package disable-mouse
-             :config (global-disable-mouse-mode 1))
-(global-disable-mouse-mode)
-;;
-;; dockerfile-mode
-;;
+  :config (global-disable-mouse-mode 1))
+
 (use-package dockerfile-mode
-             :mode "Dockerfile\\'")
-
-;;
-;; dotenv-mode
-;;
+  :mode "Dockerfile\\'")
 (use-package dotenv-mode)
+(use-package markdown-mode)
 
-;;
-;; editorconfig
-;;
 (use-package editorconfig
-             :config (editorconfig-mode 1))
+  :config (editorconfig-mode 1))
 
-;;
-;; evil
-;;
-(use-package evil)
+(use-package evil
+  :init      ;; tweak evil's configuration before loading it
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+  (setq evil-vsplit-window-right t)
+  (setq evil-split-window-below t)
+  (evil-mode 0))
 
-;;
-;; flylisp
-;;
+(use-package evil-collection
+  :after evil
+  :config
+  (setq evil-collection-mode-list '(dashboard dired ibuffer))
+  (evil-collection-init))
+
+(use-package evil-tutor)
+
 (use-package flylisp)
 
-;;
-;; go-mode
-;;
 (defun my/go-mode-hook ()
   (setq tab-width 2)
   (hl-line-mode 0)
@@ -198,135 +232,74 @@
   (add-hook 'before-save-hook #'gofmt-before-save))
 
 (use-package go-mode
-             :hook ((go-mode . my/go-mode-hook)))
-;; (add-hook 'go-mode-hook #'my/go-mode-hook)
+  :hook ((go-mode . my/go-mode-hook)))
 
-;;
-;; helm-ag
-;;
-(use-package helm-ag
-             :config
-             (helm-mode 1)
-             (defalias 'agr 'helm-do-ag-project-root)
-             (defalias 'ag 'helm-do-ag))
-
-(use-package helm-projectile)
-(use-package helm-xref)
-
-;;
-;; ls-lisp
-;;
 (require 'ls-lisp)
 (setq
  ls-lisp-dirs-first t
  ls-lisp-use-insert-directory-program nil)
 
-;;
-;; magit
-;;
-
-(defun my/magit-status-mode-hook ()
-  (visual-line-mode 1))
-
 (use-package magit
-             :config
-             (defalias 'blame 'magit-blame-addition)
-             (defalias 'b 'blame)
-             (defalias 'status 'magit-status)
-             (defalias 's 'status))
+  :hook ((magit-status-mode-hook . visual-line-mode))
+  :config
+  (defalias 'blame 'magit-blame-addition)
+  (defalias 'b 'blame)
+  (defalias 'status 'magit-status)
+  (defalias 's 'status))
 
-;;
-;; multiple-cursors
-;;
 ;; (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 ;; (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 ;; (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 ;; (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this))
 (use-package multiple-cursors
-            :bind
-            (("C-S-c C-S-c" . mc/edit-lines)
-             ("C->" . mc/mark-next-like-this)
-             ("C-<" . mc/mark-previous-like-this)
-             ("C-c C-<" . mc/mark-all-like-this)))
+  :bind
+  (("C-S-c C-S-c" . mc/edit-lines)
+   ("C->" . mc/mark-next-like-this)
+   ("C-<" . mc/mark-previous-like-this)
+   ("C-c C-<" . mc/mark-all-like-this)))
 
-;;
-;; org-tempo
-;;
 (require 'org-tempo)
 
-;;
-;; projectile
-;;
 ;; (global-set-key (kbd "C-x f") 'projectile-find-file)
 (use-package projectile
-             :config (projectile-mode 1)
-             :bind ("C-x f" . projectile-find-file))
+  :config (projectile-mode 1)
+  :bind ("C-x f" . projectile-find-file))
 
-;;
-;; rbenv
-;;
+
 (use-package rbenv)
 
-;;
-;; slime
-;;
 (use-package slime
-             :config
-             (setq inferior-lisp-program "sbcl")
-             (setq slime-contribs '(slime-fancy)))
+  :config
+  (setq inferior-lisp-program "sbcl")
+  (setq slime-contribs '(slime-fancy)))
 
-;;
-;; smart-mode-line
-;;
 (use-package smart-mode-line
-             :config
-             (when (display-graphic-p)
-               (setq sml/no-confirm-load-theme t)
-               (setq sml/theme 'dark)
-               (sml/setup)))
+  :config
+  (when (display-graphic-p)
+    (setq sml/no-confirm-load-theme t)
+    (setq sml/theme 'dark)
+    (sml/setup)))
 
-;;
-;; undo-tree
-;;
 (use-package undo-tree
-             :config (global-undo-tree-mode 1))
-
-;;
-;; web-mode
-;;
+  :config (global-undo-tree-mode 1))
 
 ;; (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.css?\\'" . web-mode))
 ;; (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
-
 (use-package web-mode
-             :mode "\\.vue\\'"
-             :mode "\\.css?\\'"
-             :mode "\\.html?\\'")
-
-;;
-;; yaml-mode
-;;
-;; (add-hook 'yaml-mode-hook
-;;           (lambda ()
-;;             (flycheck-mode)
-;;             (linum-mode-hook)
-;;             (define-key yaml-mode-map "\C-m" 'newline-and-indent)))
-(defun my/yaml-mode-hook ()
-  (flycheck-mode)
-  (linum-mode 1))
+  :mode "\\.vue\\'"
+  :mode "\\.css?\\'"
+  :mode "\\.html?\\'")
 
 (use-package yaml-mode
-             :hook ((yaml-mode . my/yaml-mode-hook))
-             :bind (:map yaml-mode-map
-                         ("C-m" . newline-and-indent)))
+  :hook ((yaml-mode . flycheck-mode)
+         (yaml-mode . linum-mode))
+  :bind (:map yaml-mode-map
+              ("C-m" . newline-and-indent)))
 
-;;
-;; yasnippet
-;;
 (use-package yasnippet
-             :config (yas-global-mode 1)
-             :bind ("M-e" . yas-expand))
+  :config (yas-global-mode 1)
+  :bind ("M-e" . yas-expand))
 
 ;;;
 ;;; Hooks
@@ -423,34 +396,21 @@
 ;; Linum-mode for all files listed in `line-them'
 (dolist (elt pretty)
   (add-hook (intern (concat (symbol-name elt) "-mode" "-hook"))
-			(lambda()
-			  (linum-mode 1)
-        (setq-default indent-tabs-mode nil))))
+			      (lambda()
+			        (linum-mode 1)
+              (setq-default indent-tabs-mode nil))))
 
 
 
 ;; Perl mode for test files
 (add-to-list 'auto-mode-alist '("\\.t\\'" . perl-mode))
 
-;; PATH to ag command
-
-
-
-;; The silver searcher aliases
-
-;;;
-;;; Eshell aliases
-;;;
-
 (defalias 'eshell/l 'eshell/ls)
 (defalias 'eshell/ll 'eshell/ls)
-
 (defun eshell/ff (file)
   (find-file-other-window file))
-
 (defun eshell/f (file)
   (find-file file))
-
 (defun eshell/clear ()
   "Clear the eshell buffer."
   (let ((inhibit-read-only t))
