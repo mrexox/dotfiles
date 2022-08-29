@@ -106,12 +106,14 @@
   (setq typescript-indent-level 2))
 
 (use-package lsp-mode
-  :after typescript-mode js
-  :hook ((js-mode . lsp-deferred)
-         (typescript-mode . lsp-deferred)))
+  :after js
+  :hook ((js-mode . lsp-deferred))
+  :config
+  (define-key js-mode-map (kbd "M-.") nil)) ;; don't prompt when jumping
 
 (use-package lsp-ivy
-  :after lsp ivy)
+  :after lsp
+  :after ivy)
 
 (use-package anzu
   :config
