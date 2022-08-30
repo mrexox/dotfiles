@@ -22,6 +22,7 @@
 ;; Use C-c C-e for fast editing .emacs
 (global-set-key (kbd "C-c C-e") '(lambda () (interactive) (find-file "~/.emacs")))
 (global-set-key (kbd "C-c C-v") 'view-mode)
+(global-set-key (kbd "C-c C-r") 'revert-buffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-<tab>") 'other-window)
 (global-set-key (kbd "C-S-<iso-lefttab>") 'other-frame)
@@ -172,21 +173,26 @@
 (use-package counsel-ag-popup
   :after counsel
   :config
-  (defun agw ()
-    (interactive)
-    (let ((dir (substring
-                (shell-command-to-string "git rev-parse --show-toplevel")
-                0 -1))
-          (word (thing-at-point 'symbol)))
-        (counsel-ag-popup-search dir word)))
+  (defalias 'ag 'counsel-ag-popup-search-here)
   (defun agr (&optional string)
+    "Search for a string in a git project"
     (interactive)
     (let ((dir (substring
                 (shell-command-to-string "git rev-parse --show-toplevel")
                 0 -1)))
-        (counsel-ag-popup-search dir string)))
-  (defalias 'ag 'counsel-ag-popup-search-here)
-  (global-set-key (kbd "C-c C-s") 'agw))
+      (counsel-ag-popup-search dir string)))
+  (defun agregion (&optional start end)
+    "Search for selected string in a git project"
+    (interactive "r")
+    (let ((dir (substring
+                (shell-command-to-string "git rev-parse --show-toplevel")
+                0 -1)))
+          (if (use-region-p)
+              (let ((phrase (buffer-substring start end)))
+                (counsel-ag-popup-search dir phrase))
+            (let ((word (thing-at-point 'symbol)))
+              (counsel-ag-popup-search dir word)))))
+  (global-set-key (kbd "C-c C-s") 'agregion))
 
 (use-package swiper
   :after ivy
