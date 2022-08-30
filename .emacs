@@ -275,12 +275,22 @@
   (setq inferior-lisp-program "sbcl")
   (setq slime-contribs '(slime-fancy)))
 
-(use-package smart-mode-line
+;; (use-package smart-mode-line
+;;   :config
+;;   (when (display-graphic-p)
+;;     (setq sml/no-confirm-load-theme t)
+;;     (setq sml/theme 'dark)
+;;     (sml/setup)))
+
+(use-package all-the-icons)
+;; I don't like it
+;; (use-package all-the-icons-dired
+;;   :hook ((dired-mode . all-the-icons-dired-mode)))
+(use-package doom-modeline
   :config
-  (when (display-graphic-p)
-    (setq sml/no-confirm-load-theme t)
-    (setq sml/theme 'dark)
-    (sml/setup)))
+  (setq doom-modeline-env-version t)
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project)
+  (doom-modeline-mode 1))
 
 (use-package undo-tree
   :config (global-undo-tree-mode 1))

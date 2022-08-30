@@ -5,6 +5,7 @@ cp -R ~/.config/bspwm ./.config/
 cp -R ~/.config/nvim ./.config/
 cp ~/.emacs .emacs
 cp ~/.vimrc .vimrc
+cp ~/.psqlrc .psqlrc
 cp ~/.tmux.conf .tmux.conf
 cp ~/.gitignore .gitignore
 cp ~/.gitconfig .gitconfig
