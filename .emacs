@@ -33,9 +33,18 @@
 (setq-default
  tab-width 2
  indent-tabs-mode nil
- gc-cons-threshold most-positive-fixnum)
-(add-hook 'after-init-hook (lambda () (setq gc-cons-threshold 800000)))
+ gc-cons-threshold most-positive-fixnum
+ gc-cons-percentage 0.6)
 (add-hook 'focus-out-hook 'garbage-collect)
+
+;; Profile emacs startup
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "*** Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
 (setq
  auto-save-default nil
@@ -164,11 +173,41 @@
   :config
   (ivy-set-display-transformer 'ivy-switch-buffer
                                'ivy-rich-switch-buffer-transformer)
+  (setq ivy-initial-inputs-alist nil)
   (ivy-rich-mode 1)) ;; this gets us descriptions in M-x.
+
+;; Might be useful, but not for now
+;; (use-package ivy-posframe
+;;   :init
+;;   (setq ivy-posframe-display-functions-alist
+;;     '((swiper                     . ivy-posframe-display-at-point)
+;;       (complete-symbol            . ivy-posframe-display-at-point)
+;;       (counsel-M-x                . ivy-display-function-fallback)
+;;       (counsel-esh-history        . ivy-posframe-display-at-window-center)
+;;       (counsel-describe-function  . ivy-display-function-fallback)
+;;       (counsel-describe-variable  . ivy-display-function-fallback)
+;;       (counsel-find-file          . ivy-display-function-fallback)
+;;       (counsel-recentf            . ivy-display-function-fallback)
+;;       (counsel-register           . ivy-posframe-display-at-frame-bottom-window-center)
+;;       (dmenu                      . ivy-posframe-display-at-frame-top-center)
+;;       (nil                        . ivy-posframe-display)))
+;;     ;; ivy-posframe-height-alist
+;;     ;; '((swiper . 20)
+;;     ;;   (dmenu . 20)
+;;     ;;   (t . 10)))
+;;   :config
+;;   (ivy-posframe-mode 1)) ; 1 enables posframe-mode, 0 disables it.
+
+;; M-x history
+(use-package smex
+  :config
+  (smex-initialize))
 
 (use-package counsel
   :after ivy
-  :config (counsel-mode))
+  :config
+  (counsel-mode)
+  (global-set-key (kbd "C-c C-g") 'counsel-imenu))
 
 (use-package counsel-ag-popup
   :after counsel
@@ -194,12 +233,16 @@
               (counsel-ag-popup-search dir word)))))
   (global-set-key (kbd "C-c C-s") 'agregion))
 
+(use-package wgrep) ;; for global changes in ivy-occur buffer
+
 (use-package swiper
   :after ivy
   :config
   (global-set-key (kbd "M-s") 'swiper-thing-at-point))
 
+;; No distraction modes
 (use-package darkroom)
+(use-package writeroom-mode)
 
 (use-package disable-mouse
   :config (global-disable-mouse-mode 1))

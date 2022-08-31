@@ -18,6 +18,9 @@ super + Escape
 super + shift + s
 	flameshot gui
 
+Print
+	flameshot gui
+
 super + shift + a
 	deeping-screen-recorder
 
