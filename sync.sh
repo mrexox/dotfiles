@@ -3,6 +3,7 @@
 cp -R ~/.config/sxhkd ./.config/
 cp -R ~/.config/bspwm ./.config/
 cp -R ~/.config/nvim ./.config/
+cp -R ~/.config/alacritty/alacritty.yml ./.config/alacritty/
 cp ~/.emacs .emacs
 cp ~/.vimrc .vimrc
 cp ~/.psqlrc .psqlrc

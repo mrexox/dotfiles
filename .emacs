@@ -5,7 +5,7 @@
 ;;; Code:
 
 ;; Global variables
-(defvar my/font "Monoid 13")
+(defvar my/font "Monoid 14")
 (defvar my/title-format
   (list
    (format "%s %%S: %%j " (system-name))
@@ -28,6 +28,8 @@
 (global-set-key (kbd "C-S-<iso-lefttab>") 'other-frame)
 (global-set-key "\M-g" 'goto-line)
 (global-set-key [f9] 'kill-other-buffers)
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
 
 ;; Set the preferred preferences
 (setq-default
