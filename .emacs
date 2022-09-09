@@ -362,7 +362,7 @@
 
 (use-package yasnippet
   :config (yas-global-mode 1)
-  :bind ("M-e" . yas-expand))
+  :bind ("M-]" . yas-expand))
 
 ;;;
 ;;; Hooks
