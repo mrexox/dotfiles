@@ -30,6 +30,7 @@ hi SignColumn ctermbg=NONE
 hi DiffDelete ctermbg=160 ctermfg=NONE
 hi DiffAdd ctermbg=28 ctermfg=NONE " 114
 hi DiffChange ctermbg=black
+hi Search ctermfg=0 ctermbg=175 guifg=Black guibg=Pink
 
 autocmd BufWritePre * %s/\s\+$//e
 
@@ -104,10 +105,11 @@ Plug 'tpope/vim-commentary' " For Commenting gcc & gc
 " Plug 'https://github.com/terryma/vim-multiple-cursors' " CTRL + N for multiple cursors
 
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'ap/vim-css-color'
 call plug#end()
 
-let g:blamer_enabled = 1
-let g:blamer_date_format = '%d/%m/%y'
+let g:blamer_enabled = 0
+let g:blamer_date_format = '%d.%m.%Y'
 let g:blamer_delay = 500
 highlight Blamer ctermfg=darkgray guifg=darkgray
 silent! nnoremap <leader>b :BlamerToggle<Cr>
@@ -160,6 +162,10 @@ require('lspconfig')['tsserver'].setup{
 on_attach = on_attach,
 flags = lsp_flags,
 }
+require('lspconfig')['solargraph'].setup{
+on_attach = on_attach,
+flags = lsp_flags,
+}
 END
 set t_Co=256
 let g:airline_theme='onedark'
@@ -197,6 +203,7 @@ lua <<END
 require("nvim-tree").setup({
 view = {
   adaptive_size = true,
+  side = "right",
   mappings = {
     list = {
       { key = "h", action = "dir_up" },
