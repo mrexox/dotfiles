@@ -32,4 +32,3 @@ set expand-tilde On
 "\e[6~": end-of-history
 "\e[2~": quoted-insert
 
-

@@ -34,17 +34,18 @@ if ($Dry_run) {
 # Get current branch information
 #
 # {
-#   full => 'feature/super-branch',
+#   full => 'feature/JIRA-123-super-branch',
 #   type => 'feature',
 #   description => 'super-branch',
+#   issue => 'JIRA-123',
 # }
 #
 sub git_branch {
     state $output = `git rev-parse --abbrev-ref HEAD 2>/dev/null`;
     chomp($output);
 
-    $output =~ m/(\w+)\/(.*)/;
-    my ($type, $description) = ($1, $2);
+    $output =~ m/(\w+)\/(?:([A-Z]+-\d+)-)?(.*)/;
+    my ($type, $issue, $description) = ($1, $2, $3);
 
     if (defined $description) {
         $description =~ s/-/ /g;
@@ -55,6 +56,7 @@ sub git_branch {
         full => $output,
         type => $type,
         description => $description,
+        issue => $issue,
     };
 }
 
@@ -83,9 +85,12 @@ sub body {
     my $info = &git_branch;
     my $issue_type = &issue_type;
 
-    print 'Issue: ';
-    my $issue = <>;
-    chomp($issue);
+    my $issue = $info->{issue};
+    if (!$issue) {
+        print 'Issue: ';
+        $issue = <>;
+        chomp($issue);
+    }
 
     my @lines;
 
@@ -96,7 +101,7 @@ sub body {
     # PR common template
     push @lines, <<~EOF;
 
-    **Summary ${issue_type}**
+    **${issue_type} Summary**
 
     EOF
 

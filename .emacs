@@ -21,6 +21,8 @@
 
 ;; Use C-c C-e for fast editing .emacs
 (global-set-key (kbd "C-c C-e") '(lambda () (interactive) (find-file "~/.emacs")))
+;; Use C-c C-o to open organizational folder with org files
+(global-set-key (kbd "C-c C-o") '(lambda () (interactive) (find-file "~/Documents/organizational")))
 (global-set-key (kbd "C-c C-v") 'view-mode)
 (global-set-key (kbd "C-c C-r") 'revert-buffer)
 (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -66,7 +68,7 @@
 ;; Modes
 (display-battery-mode 0)
 (display-time-mode 0)
-(global-hl-line-mode 1)
+(global-hl-line-mode 0)
 (global-prettify-symbols-mode 0) ; enable if you need ligatures and lambda
 (global-subword-mode 1)
 (ido-mode 0) ; Not very useful
@@ -434,7 +436,7 @@
   (highlight-regexp "#\s\*NOTE:\?\.\*\$" 'hi-yellow)
   (hl-line-mode 0) ;; temporarily off
   (linum-mode 1)
-  (flymake-mode)
+  ;;(flymake-mode)
   (rbenv-use-corresponding)
   (local-set-key (kbd "M-.") 'find-ruby-reference))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)

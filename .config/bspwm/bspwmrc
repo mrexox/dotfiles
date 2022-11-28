@@ -16,7 +16,7 @@ dunst &
 # picom --config /home/ian/.config/picom/picom.conf -b
 
 # Use wallpaper
-feh --bg-fill /home/ian/Pictures/wallpaper.png
+feh --bg-fill /home/ian/Pictures/wallpaper.jpg
 
 # Launch polybar
 #$HOME/.config/polybar/launch.sh
