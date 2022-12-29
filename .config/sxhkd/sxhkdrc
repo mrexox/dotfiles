@@ -24,7 +24,11 @@ Print
 super + shift + a
 	deeping-screen-recorder
 
+# Lock the screen
 super + shift + Delete
+	i3lock-fancy
+
+Pause
 	i3lock-fancy
 
 XF86AudioRaiseVolume

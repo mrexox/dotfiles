@@ -31,6 +31,7 @@ hi DiffDelete ctermbg=160 ctermfg=NONE
 hi DiffAdd ctermbg=28 ctermfg=NONE " 114
 hi DiffChange ctermbg=black
 hi Search ctermfg=0 ctermbg=175 guifg=Black guibg=Pink
+hi Pmenu ctermbg=black ctermfg=255 guibg=Black
 
 autocmd BufWritePre * %s/\s\+$//e
 
@@ -153,19 +154,21 @@ end
 local lsp_flags = {
   -- This is the default in Nvim 0.7+
   debounce_text_changes = 150,
-  }
+}
+
 -- require('lspconfig')['pyright'].setup{
--- on_attach = on_attach,
--- flags = lsp_flags,
+--   on_attach = on_attach,
+--   flags = lsp_flags,
 -- }
 require('lspconfig')['tsserver'].setup{
-on_attach = on_attach,
-flags = lsp_flags,
+  on_attach = on_attach,
+  flags = lsp_flags,
 }
 -- require('lspconfig')['solargraph'].setup{
--- on_attach = on_attach,
--- flags = lsp_flags,
+--   on_attach = on_attach,
+--   flags = lsp_flags,
 -- }
+
 END
 set t_Co=256
 let g:airline_theme='onedark'
