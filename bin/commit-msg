@@ -1,0 +1,47 @@
+#!/usr/bin/env perl
+
+# Usage:
+#   commit-msg COMMIT_MSG_FILE
+#
+# Prepares a commit message based on branch name.
+# Handles change types, like fix/, chore/, etc. [converts to fix:, chore:]
+# Handles issue numbers, like JIRA-123 [skips them].
+
+use 5.010;
+use strict;
+use warnings;
+
+my $commit_msg_file = $ARGV[0];
+
+# Read initial commit message
+my $initial_content;
+open(my $fh, '<', $commit_msg_file) or die "Can't open $commit_msg_file";
+{
+  local $/;
+  $initial_content = <$fh>;
+}
+close($fh);
+
+# Get branch name
+my $branch = `git rev-parse --abbrev-ref HEAD 2>/dev/null`;
+chomp($branch);
+
+$branch =~ /(?:(\w+)\/)?([A-Z]+-\d+-)?(.+)/;
+my ($type, $message) = ($1, $3);
+
+$message =~ s/-/ /g;
+$message = ucfirst($message);
+
+my $first_commit = `git rev-list --count HEAD ^master`;
+chomp($first_commit);
+
+# Write
+open($fh, '>', $commit_msg_file) or die "Can't open $commit_msg_file for write";
+{
+  if ($first_commit eq "0") {
+    print $fh "$type: $message\n";
+  }
+
+  print $fh $initial_content;
+}
+close($fh);
