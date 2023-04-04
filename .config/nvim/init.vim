@@ -22,7 +22,15 @@ set smartindent
 set autoread
 set hls
 set modifiable
-set colorcolumn=90
+
+"Turn on backup option
+set backup
+set backupdir=~/.vim/backup//
+set writebackup
+set backupcopy=yes
+"Meaningful backup name, ex: filename@2015-04-05.14:59
+au BufWritePre * let &bex = '@' . strftime("%F.%H:%M")
+
 highlight ColorColumn ctermbg=black ctermfg=red
 hi Folded ctermbg=black
 hi FoldColumn ctermbg=NONE
@@ -40,14 +48,11 @@ set laststatus=2
 set tags=tags
 nnoremap <leader>ct :silent ! ctags -R --languages=ruby --exclude=.git --exclude=node_modules --exclude=log -f tags<cr>
 
-set guifont=Monoid:h8
+" set guifont=Monoid:h8
+set guifont=Monoid:h9
 "set guifont=Martian\ Mono:h9
 set guioptions=
 
-if has('gui_running')
-  colorscheme defnoche
-  set t_Co=8 t_md=
-endif
 
 " useful mappings
 silent! nnoremap <leader>o :only<CR>
@@ -107,7 +112,21 @@ Plug 'tpope/vim-commentary' " For Commenting gcc & gc
 
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'ap/vim-css-color'
+Plug 'vim-crystal/vim-crystal'
+Plug 'tpope/vim-fugitive'
+Plug 'junegunn/gv.vim'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'sindrets/diffview.nvim'
+Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
 call plug#end()
+
+if has('gui_running')
+  set t_Co=8 t_md=
+endif
+
+"Crystal
+let g:crystal_auto_format = 1
 
 let g:blamer_enabled = 0
 let g:blamer_date_format = '%d.%m.%Y'
@@ -160,10 +179,10 @@ local lsp_flags = {
 --   on_attach = on_attach,
 --   flags = lsp_flags,
 -- }
-require('lspconfig')['tsserver'].setup{
-  on_attach = on_attach,
-  flags = lsp_flags,
-}
+-- require('lspconfig')['tsserver'].setup{
+--   on_attach = on_attach,
+--   flags = lsp_flags,
+-- }
 -- require('lspconfig')['solargraph'].setup{
 --   on_attach = on_attach,
 --   flags = lsp_flags,
@@ -174,6 +193,7 @@ set t_Co=256
 let g:airline_theme='onedark'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail'
+let g:airline_powerline_fonts = 1
 
 " 'scrooloose/nerdtree'
 "silent! map <F2> :NERDTreeToggle<CR>
@@ -243,4 +263,18 @@ if exists("g:neovide")
   let g:neovide_refresh_rate=30
   let g:neovide_refresh_rate_idle=5
   let g:neovide_transparency=0.8
+  let g:neovide_hide_mouse_when_typing = v:true
+  let g:neovide_cursor_trail_size = 0.2
+
+  lua <<END
+  vim.keymap.set('n', '<C-S-s>', ':w<CR>') -- Save
+  vim.keymap.set('v', '<C-S-c>', '"+y') -- Copy
+  vim.keymap.set('n', '<C-S-v>', '"+P') -- Paste normal mode
+  vim.keymap.set('v', '<C-S-v>', '"+P') -- Paste visual mode
+  vim.keymap.set('c', '<C-S-v>', '<C-R>+') -- Paste command mode
+  vim.keymap.set('i', '<C-S-v>', '<ESC>"+pa') -- Paste insert mode
+END
+
+  colorscheme moonfly
 endif
+

@@ -26,8 +26,12 @@
   s = status
   b = branch
   ca = commit --amend
+	pushf = push --force-with-lease
+  rc = rebase --continue
 [commit]
   gpgsign = true
+[tag]
+	gpgSign = true
 [http "https://gopkg.in"]
 	followRedirects = true
 [gpg]

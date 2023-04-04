@@ -110,18 +110,24 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(use-package crystal-mode)
+(use-package crystal-mode
+  :hook ((crystal-mode . linum-mode))
+  :config
+  (define-key crystal-mode-map (kbd "M-.") #'crystal-def-jump))
 
 (use-package typescript-mode
   :mode "\\.ts\\'"
-  :hook ((typescript-mode . lsp-deferred)
-         (typescript-mode . linum-mode))
+  :mode "\\.js\\'"
+  :hook ((typescript-mode . linum-mode))
   :config
   (setq typescript-indent-level 2))
 
 (use-package lsp-mode
   :after js
-  :hook ((js-mode . lsp-deferred))
+  :hook (
+         (js-mode . lsp-deferred)
+         (typescript-mode . lsp-deferred)
+         )
   :config
   (define-key js-mode-map (kbd "M-.") nil)) ;; don't prompt when jumping
 
@@ -356,6 +362,9 @@
   :mode "\\.css?\\'"
   :mode "\\.html?\\'")
 
+(use-package haml-mode)
+(use-package coffee-mode)
+
 (use-package yaml-mode
   :hook ((yaml-mode . flycheck-mode)
          (yaml-mode . linum-mode))
@@ -502,7 +511,7 @@
             (cons #'display-buffer-no-window nil)))))
     (if isdir
         (async-shell-command
-         (format "(cd %s ; find . -type f -name '*.rb' -o -name '*.js' -not -path './*/node_modules/*' | etags -) &"
+         (format "(cd %s ; find . -type f -name '*.rb' -o -name '*.cr' -o -name '*.js' -not -path './*/node_modules/*' | etags -) &"
                  dir))
       (message "You are not in a git project"))))
 
