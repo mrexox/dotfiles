@@ -23,6 +23,7 @@
   a = add -A
   c = checkout
   cc = commit
+  cm = commit --message
   s = status
   b = branch
   ca = commit --amend
@@ -63,3 +64,5 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
 	required = true
+[safe]
+	directory = /tmp/anycable-go
