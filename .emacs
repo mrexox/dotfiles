@@ -63,6 +63,7 @@
  tags-add-tables nil ; never keep current tags table; always open without asking.
  tags-revert-without-query 1
  visible-cursor 1
+ calendar-week-start-day 1
  initial-scratch-message "\n\n\n")
 
 ;; Modes
@@ -218,6 +219,13 @@
   :config
   (counsel-mode)
   (global-set-key (kbd "C-c C-g") 'counsel-imenu))
+
+(use-package counsel-etags
+  :ensure t
+  :bind (("M-." . counsel-etags-find-tag-at-point))
+  :config
+  (push "build" counsel-etags-ignore-directories)
+  (push "log" counsel-etags-ignore-directories))
 
 (use-package counsel-ag-popup
   :after counsel
@@ -446,8 +454,8 @@
   (hl-line-mode 0) ;; temporarily off
   (linum-mode 1)
   ;;(flymake-mode)
-  (rbenv-use-corresponding)
-  (local-set-key (kbd "M-.") 'find-ruby-reference))
+  (rbenv-use-corresponding))
+  ;;(local-set-key (kbd "M-.") 'find-ruby-reference))
 (add-hook 'ruby-mode-hook 'my/ruby-mode-hook)
 
 (defun my/c-mode-hook ()
@@ -515,19 +523,12 @@
                  dir))
       (message "You are not in a git project"))))
 
-(defun eshell-new()
-  "Open a new instance of eshell."
-  (interactive)
-  (eshell 'N))
-
 (defun kill-other-buffers ()
   "Kill all other buffers."
   (interactive)
   (delete-other-windows)
   (mapc 'kill-buffer (delq (get-buffer "*scratch*")
                            (delq (current-buffer) (buffer-list)))))
-
-(defalias 'killo 'kill-other-buffers)
 
 (defun today ()
   "Insert current date under cursor"
