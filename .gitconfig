@@ -27,8 +27,11 @@
   s = status
   b = branch
   ca = commit --amend
+  ce = commit --amend --no-edit
+  ace = !git add -A && git commit --amend --no-edit
 	pushf = push --force-with-lease
   rc = rebase --continue
+  pr = !git-pr
 [commit]
   gpgsign = true
 [tag]

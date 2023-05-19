@@ -45,6 +45,9 @@ autocmd BufWritePre * %s/\s\+$//e
 
 set laststatus=2
 
+" Leave only the current buffer
+command Ob :%bd|edit#|bd#
+
 set tags=tags
 nnoremap <leader>ct :silent ! ctags -R --languages=ruby --exclude=.git --exclude=node_modules --exclude=log -f tags<cr>
 
@@ -62,7 +65,11 @@ silent! nnoremap <S-Right> :bn<CR>
 silent! nnoremap _ :bp<CR>
 silent! nnoremap + :bn<CR>
 silent! nnoremap \| :bd<CR>
-
+silent! nnoremap <leader>gd :Gvdiff!<CR>
+silent! nnoremap <leader>gh :diffget //2<CR>
+silent! nnoremap <leader>gl :diffget //3<CR>
+silent! nnoremap <leader>[ :diffget //2<CR>
+silent! nnoremap <leader>] :diffget //3<CR>
 
 " netrw
 let g:netrw_winsize = 25

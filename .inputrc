@@ -18,6 +18,8 @@
 set completion-ignore-case On
 set completion-map-case On
 set completion-query-items 400
+set completion-display-width 0
+set comment-begin #
 set show-all-if-ambiguous On
 set show-all-if-unmodified On
 set visible-stats On
@@ -25,6 +27,7 @@ set colored-stats On
 set echo-control-characters Off
 set enable-bracketed-paste On
 set expand-tilde On
+set blink-matching-paren On
 
 "\e[1~": beginning-of-line
 "\e[4~": end-of-line

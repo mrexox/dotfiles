@@ -61,8 +61,8 @@
  large-file-warning-threshold nil
  ruby-insert-encoding-magic-comment nil
  tags-add-tables nil ; never keep current tags table; always open without asking.
- tags-revert-without-query 1
- visible-cursor 1
+ tags-revert-without-query t
+ visible-cursor t
  calendar-week-start-day 1
  initial-scratch-message "\n\n\n")
 

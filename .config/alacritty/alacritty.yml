@@ -181,6 +181,8 @@ colors:
   primary:
     background: '0x000000' #'0x1d1f21'
     foreground: '#dcdccc' #'0xc5c8c6'
+    # background: '0xffffff' #'0x1d1f21'
+    # foreground: '#111111' #'0xc5c8c6'
   # Colors the cursor will use if `custom_cursor_colors` is true
   cursor:
     text: '0x1d1f21'
