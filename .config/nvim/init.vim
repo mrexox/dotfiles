@@ -49,7 +49,7 @@ set laststatus=2
 command Ob :%bd|edit#|bd#
 
 set tags=tags
-nnoremap <leader>ct :silent ! ctags -R --languages=ruby --exclude=.git --exclude=node_modules --exclude=log -f tags<cr>
+nnoremap <leader>ct :silent ! ctags -R --languages=ruby,rust --exclude=.git --exclude=node_modules --exclude=log -f tags<cr>
 
 " set guifont=Monoid:h8
 set guifont=Monoid:h9
@@ -70,6 +70,7 @@ silent! nnoremap <leader>gh :diffget //2<CR>
 silent! nnoremap <leader>gl :diffget //3<CR>
 silent! nnoremap <leader>[ :diffget //2<CR>
 silent! nnoremap <leader>] :diffget //3<CR>
+silent! nnoremap <leader>t :e ~/Documents/organizational/coveralls.md<CR>
 
 " netrw
 let g:netrw_winsize = 25
@@ -126,11 +127,15 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'sindrets/diffview.nvim'
 Plug 'bluz71/vim-moonfly-colors', { 'as': 'moonfly' }
+Plug 'rust-lang/rust.vim'
 call plug#end()
 
 if has('gui_running')
   set t_Co=8 t_md=
 endif
+
+"Rust
+let g:rustfmt_autosave = 1
 
 "Crystal
 let g:crystal_auto_format = 1
@@ -153,29 +158,26 @@ vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
 -- Enable completion triggered by <c-x><c-o>
-vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+-- vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
--- Mappings.
--- See `:help vim.lsp.*` for documentation on any of the below functions
-local bufopts = { noremap=true, silent=true, buffer=bufnr }
-vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
-vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
-vim.keymap.set('n', '<space>wl', function()
-print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
-end, bufopts)
-vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
-vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
-vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
-vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
-vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
-end
+-- -- Mappings.
+-- -- See `:help vim.lsp.*` for documentation on any of the below functions
+-- local bufopts = { noremap=true, silent=true, buffer=bufnr }
+-- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
+-- vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+-- vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+-- vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+-- vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+-- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
+-- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
+-- vim.keymap.set('n', '<space>wl', function()
+-- print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+-- vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, bufopts)
+-- vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, bufopts)
+-- vim.keymap.set('n', '<space>ca', vim.lsp.buf.code_action, bufopts)
+-- vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+-- vim.keymap.set('n', '<space>f', vim.lsp.buf.formatting, bufopts)
 
 local lsp_flags = {
   -- This is the default in Nvim 0.7+
@@ -230,17 +232,29 @@ silent! nnoremap <leader>g :Neogit<CR>
 
 " vim-tree
 lua <<END
+local function on_attach(bufnr)
+  local api = require "nvim-tree.api"
+
+  local function opts(desc)
+    return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+
+  -- default mappings
+  api.config.mappings.default_on_attach(bufnr)
+
+  -- custom mappings
+  vim.keymap.set('n', '?',     api.tree.toggle_help,                opts('Help'))
+  vim.keymap.set('n', 'l',     api.node.open.edit,                  opts('Edit'))
+  vim.keymap.set('n', 'h',     api.tree.change_root_to_parent,      opts('Up'))
+
+end
+
 require("nvim-tree").setup({
+on_attach = on_attach,
 view = {
   adaptive_size = true,
   side = "right",
-  mappings = {
-    list = {
-      { key = "h", action = "dir_up" },
-      { key = "l", action = "edit" },
-      },
-    },
-  },
+},
 actions = {
   change_dir = {
     enable = true,

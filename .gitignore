@@ -8,3 +8,4 @@ __dev__/
 .log/
 
 lefthook-local.yml
+.gitattributes

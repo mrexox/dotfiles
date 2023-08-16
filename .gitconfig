@@ -9,6 +9,7 @@
   quotepath = false
   autocrlf = input
 	excludesFile = ~/.gitignore
+  attributesfile = ~/.gitattributes
 [merge]
   summary = true
   conflictstyle = diff3

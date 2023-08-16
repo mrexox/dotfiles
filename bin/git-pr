@@ -49,13 +49,14 @@ sub git_branch {
 
     if (defined $description) {
         $description =~ s/-/ /g;
-        $description = ucfirst($description);
+        # $description = ucfirst($description);
     }
 
     return {
         full => $output,
         type => $type,
-        description => $description,
+        # description => $description,
+        description => "$type: $description",
         issue => $issue,
     };
 }
