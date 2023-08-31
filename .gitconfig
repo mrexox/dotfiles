@@ -1,7 +1,7 @@
 [user]
 	email = mrexox@evilmartians.com
 	name = Valentin Kiselev
-	signingkey = 0x5FB6DBC4E654859B
+	signingkey = 3C83E449D37B56A5
 [apply]
   whitespace = nowarn
 [core]
@@ -33,6 +33,7 @@
 	pushf = push --force-with-lease
   rc = rebase --continue
   pr = !git-pr
+  lg = !git log --pretty=format:\"%C(magenta)%h%Creset -%C(red)%d%Creset %s %C(dim green)(%cr) [%an]\" --abbrev-commit | less -r
 [commit]
   gpgsign = true
 [tag]
@@ -40,7 +41,7 @@
 [http "https://gopkg.in"]
 	followRedirects = true
 [gpg]
-	program = gpg2
+	program = gpg
 [init]
 	defaultBranch = main
 

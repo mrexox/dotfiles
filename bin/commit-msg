@@ -6,10 +6,39 @@
 # Prepares a commit message based on branch name.
 # Handles change types, like fix/, chore/, etc. [converts to fix:, chore:]
 # Handles issue numbers, like JIRA-123 [skips them].
+#
+# Use with Lefthook:
+# prepare-commit-msg:
+#   commands:
+#     commit-message:
+#       skip:
+#         - rebase
+#         - merge
+#       only:
+#         - ref: '*/*'
+#       run: commit-msg "{1}"
+
 
 use 5.010;
 use strict;
 use warnings;
+
+if ($ARGV[0] eq "lefthook") {
+  open(my $fh, '>', "lefthook-local.yml") or die "Can't open lefthook-local.yml";
+  print $fh <<END;
+prepare-commit-msg:
+  commands:
+    commit-message:
+      skip:
+        - rebase
+        - merge
+      only:
+        - ref: '*/*'
+      run: commit-msg "{1}"
+END
+  close($fh);
+  exit(0);
+}
 
 my $commit_msg_file = $ARGV[0];
 
@@ -30,7 +59,8 @@ $branch =~ /(?:(\w+)\/)?([A-Z]+-\d+-)?(.+)/;
 my ($type, $message) = ($1, $3);
 
 $message =~ s/-/ /g;
-$message = ucfirst($message);
+# Uncomment if need capitalized message
+# $message = ucfirst($message);
 
 my $first_commit = `git rev-list --count HEAD ^master`;
 chomp($first_commit);

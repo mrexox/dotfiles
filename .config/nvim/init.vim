@@ -4,6 +4,7 @@
 " Run:
 " curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 syntax enable
+set clipboard=unnamedplus
 set ignorecase
 set tabstop=2
 set softtabstop=2
@@ -52,12 +53,13 @@ set tags=tags
 nnoremap <leader>ct :silent ! ctags -R --languages=ruby,rust --exclude=.git --exclude=node_modules --exclude=log -f tags<cr>
 
 " set guifont=Monoid:h8
-set guifont=Monoid:h9
+set guifont=Monoid\ Nerd\ Font:h9
 "set guifont=Martian\ Mono:h9
 set guioptions=
 
 
 " useful mappings
+silent! nnoremap <leader>1 :Ob<CR>
 silent! nnoremap <leader>o :only<CR>
 silent! nnoremap <leader>i :e ~/.config/nvim/init.vim<Cr>
 silent! nnoremap <S-Left> :bp<CR>
@@ -146,8 +148,8 @@ let g:blamer_delay = 500
 highlight Blamer ctermfg=darkgray guifg=darkgray
 silent! nnoremap <leader>b :BlamerToggle<Cr>
 
-" 'neovim/nvim-lspconfig'
-lua <<END
+lua << END
+
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap=true, silent=true }
@@ -196,8 +198,8 @@ local lsp_flags = {
 --   on_attach = on_attach,
 --   flags = lsp_flags,
 -- }
-
 END
+
 set t_Co=256
 let g:airline_theme='onedark'
 let g:airline#extensions#tabline#enabled = 1
@@ -230,7 +232,30 @@ let g:startify_bookmarks = systemlist("cut -sd' ' -f 2- ~/.NERDTreeBookmarks")
 silent! nnoremap <C-x>g :Neogit<CR>
 silent! nnoremap <leader>g :Neogit<CR>
 
+silent! nnoremap <leader>d :NvimTreeToggle<Cr>
+silent! nnoremap <leader>w :NvimTreeToggle %:p:h<Cr>
+
+if exists("g:neovide")
+  let g:neovide_refresh_rate=30
+  let g:neovide_refresh_rate_idle=5
+  let g:neovide_transparency=0.8
+  let g:neovide_hide_mouse_when_typing = v:true
+  let g:neovide_cursor_trail_size = 0.2
+
+  lua <<END
+    vim.keymap.set('n', '<C-s>', ':w<CR>') -- Save
+    vim.keymap.set('v', '<C-C>', '"+y') -- Copy
+    vim.keymap.set('n', '<C-V>', '"+P') -- Paste normal mode
+    vim.keymap.set('v', '<C-V>', '"+P') -- Paste visual mode
+    vim.keymap.set('c', '<C-V>', '<C-R>+') -- Paste command mode
+    vim.keymap.set('i', '<C-V>', '<ESC>"+pa') -- Paste insert mode
+END
+
+  colorscheme moonfly
+endif
+
 " vim-tree
+"
 lua <<END
 local function on_attach(bufnr)
   local api = require "nvim-tree.api"
@@ -277,25 +302,3 @@ renderer = {
   }
 })
 END
-silent! nnoremap <leader>d :NvimTreeToggle<Cr>
-silent! nnoremap <leader>w :NvimTreeToggle %:p:h<Cr>
-
-if exists("g:neovide")
-  let g:neovide_refresh_rate=30
-  let g:neovide_refresh_rate_idle=5
-  let g:neovide_transparency=0.8
-  let g:neovide_hide_mouse_when_typing = v:true
-  let g:neovide_cursor_trail_size = 0.2
-
-  lua <<END
-  vim.keymap.set('n', '<C-S-s>', ':w<CR>') -- Save
-  vim.keymap.set('v', '<C-S-c>', '"+y') -- Copy
-  vim.keymap.set('n', '<C-S-v>', '"+P') -- Paste normal mode
-  vim.keymap.set('v', '<C-S-v>', '"+P') -- Paste visual mode
-  vim.keymap.set('c', '<C-S-v>', '<C-R>+') -- Paste command mode
-  vim.keymap.set('i', '<C-S-v>', '<ESC>"+pa') -- Paste insert mode
-END
-
-  colorscheme moonfly
-endif
-
