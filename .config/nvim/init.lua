@@ -56,8 +56,9 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'tpope/vim-fugitive'
 Plug 'romainl/vim-cool'
 Plug 'sheerun/vim-polyglot'
-Plug('junegunn/fzf', {['do'] = vim.fn['fzf#install']})
-Plug 'junegunn/fzf.vim'
+-- install manually: ripgrep, fzf
+Plug('ibhagwan/fzf-lua', {['branch'] = 'main'})
+Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'TimUntersberger/neogit'
 Plug('fatih/vim-go', {['do'] = 'GoUpdateBinaries'})
@@ -77,6 +78,7 @@ Plug('bluz71/vim-moonfly-colors', {as = 'moonfly'})
 Plug 'rust-lang/rust.vim'
 Plug('akinsho/bufferline.nvim', {tag = '*' })
 Plug 'kazhala/close-buffers.nvim'
+Plug 'sindrets/diffview.nvim'
 vim.call('plug#end')
 
 local function on_attach(bufnr)
@@ -94,6 +96,36 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'l',     api.node.open.edit,                  opts('Edit'))
   vim.keymap.set('n', 'h',     api.tree.change_root_to_parent,      opts('Up'))
 end
+
+require'lspconfig'.tsserver.setup({})
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
 
 require("nvim-tree").setup({
     on_attach = on_attach,
@@ -186,16 +218,23 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 vim.keymap.set('n', '<Leader>p', vim.cmd.Files, opts)
-vim.keymap.set('n', '<Leader>f', vim.cmd.GFiles, opts)
-vim.keymap.set('n', '<Leader>s', vim.cmd.Ag, opts)
-vim.keymap.set('n', '<Leader>a', function()
-  local word = vim.fn.expand("<cword>")
-  vim.cmd.Ag(word)
+vim.keymap.set('n', '<Leader>f', require('fzf-lua').git_files, opts)
+vim.keymap.set('n', '<Leader>s', require('fzf-lua').live_grep, opts)
+vim.keymap.set('n', '<Leader>/', require('fzf-lua').lgrep_curbuf, opts)
+vim.keymap.set('n', '<Leader>a', require('fzf-lua').grep_cword, opts)
+vim.keymap.set('v', '<Leader>a', require('fzf-lua').grep_visual, opts)
+vim.keymap.set('n', '<Leader>A', function()
+  local curdir = vim.fn.expand("%:p:h")
+  require('fzf-lua').grep_cword({ cwd = curdir })
 end, opts)
-vim.keymap.set('n', '<Leader>l', vim.cmd.Buffers, opts)
+vim.keymap.set('v', '<Leader>A', function()
+  local curdir = vim.fn.expand("%:p:h")
+  require('fzf-lua').grep_visual({ cwd = curdir })
+end, opts)
+vim.keymap.set('n', '<Leader>l', require('fzf-lua').buffers, opts)
 vim.keymap.set('n', '<Leader>d', function()
-  local pwd = vim.fn.expand("$PWD")
-  vim.cmd.NvimTreeToggle(pwd)
+  local cwd = vim.fn.getcwd()
+  vim.cmd.NvimTreeToggle(cwd)
 end, opts)
 vim.keymap.set('n', '<Leader>w', function()
   local curdir = vim.fn.expand("%:p:h")
@@ -238,5 +277,3 @@ vim.g.netrw_banner = 0
 vim.g.netrw_browse_split = 1
 vim.g.netrw_winsize = 25
 vim.g.rustfmt_autosave = 1
-vim.g.fzf_layout = { window = { width = 0.9, height = 0.8 } }
-vim.g.fzf_preview_window = {'right:75%:hidden', 'ctrl-/'}
