@@ -98,6 +98,7 @@ local function on_attach(bufnr)
 end
 
 require'lspconfig'.tsserver.setup({})
+require'lspconfig'.solargraph.setup({})
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
