@@ -79,6 +79,7 @@ Plug 'rust-lang/rust.vim'
 Plug('akinsho/bufferline.nvim', {tag = '*' })
 Plug 'kazhala/close-buffers.nvim'
 Plug 'sindrets/diffview.nvim'
+Plug 'mrexox/github-open.nvim'
 vim.call('plug#end')
 
 local function on_attach(bufnr)
@@ -97,8 +98,15 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'h',     api.tree.change_root_to_parent,      opts('Up'))
 end
 
+-- TypeScript and JavaScript LSP
 require'lspconfig'.tsserver.setup({})
-require'lspconfig'.solargraph.setup({})
+
+-- Ruby LSP
+-- require'lspconfig'.solargraph.setup({})
+
+-- Rust
+require'lspconfig'.rust_analyzer.setup({})
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
   callback = function(ev)
@@ -189,6 +197,7 @@ require('close_buffers').setup({
   next_buffer_cmd = nil,  -- Custom function to retrieve the next buffer when preserving window layout
 })
 
+
 -- keymaps
 
 vim.keymap.set('n', '<Leader>ct', function()
@@ -209,8 +218,8 @@ vim.keymap.set('n', '|', function()
   require('close_buffers').wipe({ type = 'this' })
 end, opts)
 -- vim.keymap.set('n', '<Leader>gd', vim.cmd.Gvdiff!, opts)
-vim.keymap.set('n', '<Leader>gh', function() vim.cmd.diffget('//2') end, opts)
-vim.keymap.set('n', '<Leader>gl', function() vim.cmd.diffget('//3') end, opts)
+vim.keymap.set('n', '<Leader>gh', require('github-open').open_file, opts)
+vim.keymap.set('n', '<Leader>gl', require('github-open').open_line, opts)
 vim.keymap.set('n', '<Leader>[', function() vim.cmd.diffget('//2') end, opts)
 vim.keymap.set('n', '<Leader>]', function() vim.cmd.diffget('//3') end, opts)
 vim.keymap.set('n', '<Leader>b', vim.cmd.BlamerToggle, opts)
