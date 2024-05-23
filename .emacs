@@ -7,7 +7,7 @@
 ;; Settings
 
 (set-frame-font "Monoid Nerd Font Mono Retina 15" t)
-
+(setq diary-file "~/Dropbox/My/diary")
 (when (window-system)
   (set-frame-size (selected-frame) 100 40)
   (set-frame-position (selected-frame) 300 90))
@@ -25,6 +25,10 @@
 (set-face-attribute 'region nil :background "#f5ebe0" :foreground "#d14d72")
 (set-cursor-color "#bbbbbb") 
 (prefer-coding-system 'utf-8)
+(setq exec-path (append exec-path '("/opt/homebrew/bin")))
+(setenv "PATH" (concant (getenv "PATH") ":/opt/homebrew/bin"))
+(setq visible-bell nil)
+(setq ring-bell-function 'ignore)
 
 ;; Functions
 
@@ -34,7 +38,7 @@
 
 (defun hooks/text-mode-hook ()
   (interactive)
-  (setq buffer-face-mode-face '(:family "helvetica" :height 200))
+  (setq buffer-face-mode-face '(:family "georgia" :height 200))
   (setq cursor-type 'bar)
   (buffer-face-mode)
   (visual-line-mode)
@@ -55,6 +59,9 @@
 (add-hook 'ruby-mode-hook 'hooks/ruby-mode-hook)
 (global-set-key (kbd "C-c -") 'kbd/insert-emdash)
 
+(global-set-key (kbd "C-у") 'move-end-of-line)
+(global-set-key (kbd "C-ф") 'move-beginning-of-line)
+
 ;; Packages
 
 (setq use-package-always-ensure t)
@@ -67,13 +74,15 @@
   (mood-line-mode)
   (setq mood-line-glyph-alist mood-line-glyphs-fira-code))
 
-(use-package smartscans
+(use-package smartscan
   :init
   (smartscan-mode 1))
 
 (use-package darkroom)
 
 (use-package enh-ruby-mode)
+(use-package typescript-mode)
+(use-package markdown-mode)
 
 (use-package magit
   :config
@@ -88,7 +97,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(mood-line enh-ruby-mode magit smartscan darkroom)))
+ '(package-selected-packages
+   '(markdown-mode typescript-mode mood-line enh-ruby-mode magit smartscan darkroom)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

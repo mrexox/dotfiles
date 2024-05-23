@@ -1,11 +1,5 @@
-TAGS
-tags
-__dev__/
-.__dev/
-.__dev__/
+/lefthook-local.yml
+/tags
 
-*.org
-.log/
-
-lefthook-local.yml
-.gitattributes
+.env.staging
+.env.production

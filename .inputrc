@@ -12,6 +12,8 @@
 # commands in your history
 "\e[B": history-search-forward
 "\e[A": history-search-backward
+"\e[C": forward-char
+"\e[D": backward-char
 
 # this lets you hit tab to auto-complete a file or
 # directory name ignoring case

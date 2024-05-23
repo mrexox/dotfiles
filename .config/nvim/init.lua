@@ -7,6 +7,7 @@ vim.o.hls = true
 vim.o.ignorecase = true
 vim.o.laststatus = 2
 vim.o.lazyredraw = true
+vim.o.linebreak = true
 vim.o.modifiable = true
 vim.o.number = true
 vim.o.shiftwidth = 2
@@ -20,13 +21,6 @@ vim.o.tags = "tags"
 vim.o.wildmenu = true
 vim.o.writebackup = true
 vim.o.guifont = "Monoid Nerd Font Mono Retina:h15"
-vim.o.guioptions = nil
-vim.o.t_Co=256
-
-if vim.fn.has("gui_running") then
-  vim.o.t_Co = 8
-  vim.o.t_md = nil
-end
 
 -- highlights
 
@@ -58,8 +52,8 @@ Plug 'romainl/vim-cool'
 Plug 'sheerun/vim-polyglot'
 -- install manually: ripgrep, fzf
 Plug('ibhagwan/fzf-lua', {['branch'] = 'main'})
-Plug 'nvim-tree/nvim-web-devicons'
 Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-tree/nvim-web-devicons'
 Plug 'TimUntersberger/neogit'
 Plug('fatih/vim-go', {['do'] = 'GoUpdateBinaries'})
 Plug 'mhinz/vim-startify'
@@ -72,8 +66,8 @@ Plug 'vim-crystal/vim-crystal'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/gv.vim'
 Plug 'editorconfig/editorconfig-vim'
-Plug 'nvim-lua/plenary.nvim'
 Plug 'sindrets/diffview.nvim'
+Plug 'Shatur/neovim-ayu'
 Plug('bluz71/vim-moonfly-colors', {as = 'moonfly'})
 Plug 'rust-lang/rust.vim'
 Plug('akinsho/bufferline.nvim', {tag = '*' })
@@ -97,6 +91,10 @@ local function on_attach(bufnr)
   vim.keymap.set('n', 'l',     api.node.open.edit,                  opts('Edit'))
   vim.keymap.set('n', 'h',     api.tree.change_root_to_parent,      opts('Up'))
 end
+
+vim.api.nvim_create_user_command('ToHex', '%!xxd', {bang = true})
+
+vim.api.nvim_create_user_command('ToBin', '%!xxd -r', {bang = true})
 
 -- TypeScript and JavaScript LSP
 require'lspconfig'.tsserver.setup({})
@@ -136,6 +134,12 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+require('fzf-lua').setup({
+    defaults = {
+      file_icons = false,
+    },
+  })
+
 require("nvim-tree").setup({
     on_attach = on_attach,
     view = {
@@ -167,7 +171,7 @@ require("nvim-tree").setup({
 require('lualine').setup({
     options = {
       icons_enabled = true,
-      theme = 'onedark',
+      theme = 'ayu',
       tabline = {
         lualine_a = {},
         lualine_b = {'branch'},
@@ -186,6 +190,8 @@ require("bufferline").setup({
         style = 'underline',
       },
       themable = true,
+      show_close_icons = false,
+      show_buffer_close_icons = false,
     }
   })
 
@@ -196,7 +202,6 @@ require('close_buffers').setup({
   preserve_window_layout = { 'this', 'nameless' },  -- Types of deletion that should preserve the window layout
   next_buffer_cmd = nil,  -- Custom function to retrieve the next buffer when preserving window layout
 })
-
 
 -- keymaps
 
@@ -228,8 +233,10 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 vim.keymap.set('n', '<Leader>p', vim.cmd.Files, opts)
+
 vim.keymap.set('n', '<Leader>f', require('fzf-lua').git_files, opts)
 vim.keymap.set('n', '<Leader>s', require('fzf-lua').live_grep, opts)
+vim.keymap.set('n', '<Leader>l', require('fzf-lua').buffers, opts)
 vim.keymap.set('n', '<Leader>/', require('fzf-lua').lgrep_curbuf, opts)
 vim.keymap.set('n', '<Leader>a', require('fzf-lua').grep_cword, opts)
 vim.keymap.set('v', '<Leader>a', require('fzf-lua').grep_visual, opts)
@@ -241,7 +248,7 @@ vim.keymap.set('v', '<Leader>A', function()
   local curdir = vim.fn.expand("%:p:h")
   require('fzf-lua').grep_visual({ cwd = curdir })
 end, opts)
-vim.keymap.set('n', '<Leader>l', require('fzf-lua').buffers, opts)
+
 vim.keymap.set('n', '<Leader>d', function()
   local cwd = vim.fn.getcwd()
   vim.cmd.NvimTreeToggle(cwd)
@@ -254,7 +261,7 @@ end, opts)
 if vim.g.neovide then
   vim.g.neovide_refresh_rate = 30
   vim.g.neovide_refresh_rate_idle = 5
-  vim.g.neovide_transparency = 0.95
+  -- vim.g.neovide_transparency = 0.95
   vim.g.neovide_hide_mouse_when_typing = true
   vim.g.neovide_cursor_trail_size = 0.2
 
@@ -273,9 +280,9 @@ if vim.g.neovide then
     vim.keymap.set('c', '<C-V>', '<C-R>+') -- Paste command mode
     vim.keymap.set('i', '<C-V>', '<ESC>"+pa') -- Paste insert mode
   end
-
-  vim.cmd.colorscheme("moonfly")
 end
+
+vim.cmd.colorscheme("moonfly")
 
 -- globals
 
