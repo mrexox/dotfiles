@@ -1,5 +1,7 @@
 /lefthook-local.yml
 /tags
 
+.DS_Store
+
 .env.staging
 .env.production

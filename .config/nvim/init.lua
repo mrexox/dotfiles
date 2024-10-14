@@ -22,6 +22,14 @@ vim.o.wildmenu = true
 vim.o.writebackup = true
 vim.o.guifont = "Monoid Nerd Font Mono Retina:h15"
 
+vim.g.bigfile_mode = false
+local open_ok, fd = pcall(vim.uv.fs_open, vim.api.nvim_buf_get_name(0), "r", 438)
+local stat_ok, stat = pcall(vim.uv.fs_fstat, fd)
+if open_ok and stat_ok and stat.size > 1000 * 1000 then
+  vim.g.bigfile_mode = true
+  vim.uv.fs_close(fd)
+end
+
 -- highlights
 
 vim.cmd([[
@@ -73,7 +81,10 @@ Plug 'rust-lang/rust.vim'
 Plug('akinsho/bufferline.nvim', {tag = '*' })
 Plug 'kazhala/close-buffers.nvim'
 Plug 'sindrets/diffview.nvim'
+Plug 'ejrichards/mise.nvim'
 Plug 'mrexox/github-open.nvim'
+Plug 'kdheepak/lazygit.nvim'
+Plug 'ollykel/v-vim'
 vim.call('plug#end')
 
 local function on_attach(bufnr)
@@ -96,14 +107,17 @@ vim.api.nvim_create_user_command('ToHex', '%!xxd', {bang = true})
 
 vim.api.nvim_create_user_command('ToBin', '%!xxd -r', {bang = true})
 
--- TypeScript and JavaScript LSP
-require'lspconfig'.tsserver.setup({})
+vim.env.PATH = vim.env.HOME .. '/.local/bin' .. ':' .. vim.env.HOME .. '/go/bin' .. ':' .. vim.env.HOME .. '/bin' .. ':' .. vim.env.PATH
+require('mise').setup({})
 
--- Ruby LSP
--- require'lspconfig'.solargraph.setup({})
+-- TypeScript and JavaScript
+require('lspconfig').ts_ls.setup({})
+
+-- Ruby
+-- require('lspconfig').solargraph.setup({})
 
 -- Rust
-require'lspconfig'.rust_analyzer.setup({})
+require('lspconfig').rust_analyzer.setup({})
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('UserLspConfig', {}),
@@ -133,6 +147,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end, opts)
   end,
 })
+
 
 require('fzf-lua').setup({
     defaults = {
@@ -222,7 +237,7 @@ vim.keymap.set('n', '+', vim.cmd.bn, opts)
 vim.keymap.set('n', '|', function()
   require('close_buffers').wipe({ type = 'this' })
 end, opts)
--- vim.keymap.set('n', '<Leader>gd', vim.cmd.Gvdiff!, opts)
+vim.keymap.set('n', '<Leader>lg', vim.cmd.LazyGit, opts)
 vim.keymap.set('n', '<Leader>gh', require('github-open').open_file, opts)
 vim.keymap.set('n', '<Leader>gl', require('github-open').open_line, opts)
 vim.keymap.set('n', '<Leader>[', function() vim.cmd.diffget('//2') end, opts)
@@ -257,6 +272,7 @@ vim.keymap.set('n', '<Leader>w', function()
   local curdir = vim.fn.expand("%:p:h")
   vim.cmd.NvimTreeToggle(curdir)
 end, opts)
+vim.keymap.set('n', '<Leader>gd', vim.cmd.GoDocBrowser, opts)
 
 if vim.g.neovide then
   vim.g.neovide_refresh_rate = 30
