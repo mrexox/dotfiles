@@ -9,9 +9,8 @@
 #
 # Use with Lefthook:
 # prepare-commit-msg:
-#   commands:
-#     commit-message:
-#       skip:
+#   jobs:
+#     - skip:
 #         - rebase
 #         - merge
 #       only:
@@ -26,21 +25,27 @@ use warnings;
 if ($ARGV[0] eq "lefthook") {
   open(my $fh, '>', "lefthook-local.yml") or die "Can't open lefthook-local.yml";
   print $fh <<END;
+templates:
+  main_branch: master
+
 prepare-commit-msg:
-  commands:
-    commit-message:
+  jobs
+    - run: commit-msg "{1}" {main_branch}
+      env:
+        PATH: "\$PATH:~/bin"
+      only:
+        - ref: '*/*'
       skip:
         - rebase
         - merge
-      only:
-        - ref: '*/*'
-      run: commit-msg "{1}"
+
 END
   close($fh);
   exit(0);
 }
 
 my $commit_msg_file = $ARGV[0];
+my $main_branch_name = $ARGV[1] || 'master';
 
 # Read initial commit message
 my $initial_content;
@@ -62,7 +67,7 @@ $message =~ s/-/ /g;
 # Uncomment if need capitalized message
 # $message = ucfirst($message);
 
-my $first_commit = `git rev-list --count HEAD ^master`;
+my $first_commit = `git rev-list --count HEAD ^${main_branch_name}`;
 chomp($first_commit);
 
 # Write

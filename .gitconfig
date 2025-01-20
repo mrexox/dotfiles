@@ -40,7 +40,6 @@
 	pushf = push --force-with-lease
   rc = rebase --continue
   pr = !git-pr
-  wiz = !git-wizard
 
 [commit]
   gpgsign = true
