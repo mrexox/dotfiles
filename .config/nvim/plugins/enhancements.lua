@@ -3,12 +3,12 @@ return {
   { "ejrichards/mise.nvim" },
   -- Better search results
   {
-    'romainl/vim-cool', init = function()
+    "romainl/vim-cool", init = function()
       vim.g.cool_total_matches = 1
     end,
   },
   {
-    'nvim-lualine/lualine.nvim',
+    "nvim-lualine/lualine.nvim",
     dependencies = {
       "nvim-tree/nvim-web-devicons",
       "Shatur/neovim-ayu",
@@ -16,11 +16,11 @@ return {
     opts =  {
       options = {
         icons_enabled = true,
-        theme = 'ayu',
+        theme = "ayu",
         tabline = {
           lualine_a = {},
-          lualine_b = {'branch'},
-          lualine_c = {'filename'},
+          lualine_b = {"branch"},
+          lualine_c = {"filename"},
           lualine_x = {},
           lualine_y = {},
           lualine_z = {},
@@ -37,20 +37,26 @@ return {
       vim.cmd.colorscheme("moonfly")
     end,
   },
-  { "akinsho/bufferline.nvim", version = "*", dependencies = "nvim-tree/nvim-web-devicons", opts = {
+  {
+    "akinsho/bufferline.nvim",
+    name = "bufferline",
+    version = "*",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    init = function()
+      vim.opt.termguicolors = true
+      vim.keymap.set("n", "<leader>1", "<cmd>BufferLineCloseOthers<cr>")
+    end,
+    opts = {
       options = {
         indicator = {
           icon = nil,
-          style = 'underline',
+          style = "underline",
         },
         themable = true,
         show_close_icons = false,
         show_buffer_close_icons = false,
       }
     },
-    keys = {
-      { "<leader>1", "<cmd>BufferLineCloseOthers<cr>" },
-    }
   },
   {
     "kazhala/close-buffers.nvim",
@@ -59,7 +65,7 @@ return {
       filetype_ignore = {},
       file_glob_ignore = {},
       file_regex_ignore = {},
-      preserve_window_layout = { 'this', 'nameless' },
+      preserve_window_layout = { "this", "nameless" },
       next_buffer_cmd = nil,
     },
     keys = {

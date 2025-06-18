@@ -16,7 +16,7 @@ return {
   },
   {
     "mrcjkb/rustaceanvim",
-    version = '^6',
+    version = "^6",
     lazy = false,
   },
   { "ollykel/v-vim" },
@@ -26,7 +26,7 @@ return {
     ft = "go",
     build = "GoUpdateBinaries",
     keys = {
-      { '<Leader>gd', "<cmd>GoDocBrowser<cr>" },
+      { "<Leader>gd", "<cmd>GoDocBrowser<cr>" },
     },
   },
 }

@@ -3,7 +3,7 @@ return {
   {
     "APZelos/blamer.nvim",
     init = function()
-      vim.g.blamer_date_format = '%d.%m.%Y'
+      vim.g.blamer_date_format = "%d.%m.%Y"
       vim.g.blamer_delay = 500
       vim.g.blamer_enabled = 0
       vim.cmd([[
@@ -16,7 +16,7 @@ return {
   },
   -- Quick searching content and files
   {
-    'ibhagwan/fzf-lua', opts = {
+    "ibhagwan/fzf-lua", opts = {
       defaults = {
         file_icons = false,
       },
@@ -24,18 +24,18 @@ return {
     keys = {
       { "<leader>f", "<cmd>FzfLua git_files<cr>", noremap = true, silent = true },
       { "<leader>p", "<cmd>FzfLua files<cr>", noremap = true, silent = true },
-      { '<leader>s', "<cmd>FzfLua live_grep<cr>", noremap = true, silent = true },
-      { '<leader>l', "<cmd>FzfLua buffers<cr>", noremap = true, silent = true },
-      { '<leader>/', "<cmd>FzfLua lgrep_curbuf<cr>", noremap = true, silent = true },
-      { '<leader>a', "<cmd>FzfLua grep_cword<cr>", noremap = true, silent = true },
-      { '<leader>a', "<cmd>FzfLua grep_visual<cr>", mode = "v", noremap = true, silent = true },
-      { '<leader>A', function()
+      { "<leader>s", "<cmd>FzfLua live_grep<cr>", noremap = true, silent = true },
+      { "<leader>l", "<cmd>FzfLua buffers<cr>", noremap = true, silent = true },
+      { "<leader>/", "<cmd>FzfLua lgrep_curbuf<cr>", noremap = true, silent = true },
+      { "<leader>a", "<cmd>FzfLua grep_cword<cr>", noremap = true, silent = true },
+      { "<leader>a", "<cmd>FzfLua grep_visual<cr>", mode = "v", noremap = true, silent = true },
+      { "<leader>A", function()
           local curdir = vim.fn.expand("%:p:h")
-          require('fzf-lua').grep_cword({ cwd = curdir })
+          require("fzf-lua").grep_cword({ cwd = curdir })
       end, noremap = true, silent = true },
-      { '<leader>A', function()
+      { "<leader>A", function()
           local curdir = vim.fn.expand("%:p:h")
-          require('fzf-lua').grep_visual({ cwd = curdir })
+          require("fzf-lua").grep_visual({ cwd = curdir })
       end, mode = "v", noremap = true, silent = true },
     },
   },
@@ -43,8 +43,8 @@ return {
   {
     "mrexox/github-open.nvim",
     keys = {
-      { "<leader>gh", function() require('github-open').open_file() end, },
-      { "<leader>gl", function() require('github-open').open_line() end, },
+      { "<leader>gh", function() require("github-open").open_file() end, },
+      { "<leader>gl", function() require("github-open").open_line() end, },
     },
   },
   {
@@ -61,7 +61,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- setting the keybinding for LazyGit with "keys" is recommended in
     -- order to load the plugin when the command is run for the first time
     keys = {
       { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
