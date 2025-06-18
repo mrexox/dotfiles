@@ -58,7 +58,7 @@
 
 # https://github.com/dandavison/delta#installation
 [pager]
-  diff = delta
+  diff = delta --diff-so-fancy
   log = delta
   reflog = delta
   show = delta

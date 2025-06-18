@@ -10,19 +10,17 @@ use constant {
     BRANCH_TYPES => {
         fix   => ':wrench:',
         chore => ':broom:',
+        default => ':zap:',
     },
 };
 
-my $Dry_run = 0;
 GetOptions(
-    'dry-run' => \$Dry_run,
-    'priority=i' => \my $Priority,
-    'risk=i' => \my $Risk,
+    'dry-run' => \ my $dry_run,
 );
 
-if ($Dry_run) {
-    # For debugging
-    say &title;
+if ($dry_run) {
+    say '<dry run>';
+    say 'PR title: ' . &title;
     say &body;
 } else {
     &create_pr;
@@ -74,9 +72,7 @@ sub title {
 sub issue_type {
     my $info = &git_branch;
 
-    return ':zap:' unless defined $info->{type};
-
-    BRANCH_TYPES->{$info->{type}} || ':zap:';
+    BRANCH_TYPES->{$info->{type}} || BRANCH_TYPES->{default};
 }
 
 # Remove starting and trailing whitespaces
@@ -115,5 +111,5 @@ sub create_pr {
     system("GITHUB_TOKEN= gh pr create --draft --body='${body}' --title='${title}'");
     say 'Opening PR in a second...';
     sleep 1;
-    exec("gh pr view --web")
+    exec('gh pr view --web')
 }

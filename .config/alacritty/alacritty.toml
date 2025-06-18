@@ -56,10 +56,10 @@ print_events = false
 render_timer = false
 
 [font]
-size = 15
+size = 19
 
 [font.bold]
-family = "Monoid Nerd Font Mono"
+family = "Fira Code"
 style = "Retina"
 
 [font.glyph_offset]
@@ -67,12 +67,12 @@ x = 0
 y = 0
 
 [font.normal]
-family = "Monoid Nerd Font Mono"
-style = "Retina"
+family = "Fira Code"
+style = "Regular"
 
 [font.offset]
 x = 0
-y = 1
+y = 0
 
 [[keyboard.bindings]]
 action = "Paste"

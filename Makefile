@@ -1,7 +1,8 @@
 sync:
 	@if test -e $(HOME)/.config/sxhdk; then cp -R ~/.config/sxhkd ./.config/; fi
 	@if test -e $(HOME)/.config/bspwm; then cp -R ~/.config/bspwm ./.config/; fi
-	cp -R ~/.config/nvim ./.config/
+	cp -R ~/.config/nvim/init.lua ./.config/nvim/init.lua
+	cp -R ~/.config/nvim/lua/ ./.config/nvim/
 	@if test -e $(HOME)/.config/alacritty; then \
 		cp ~/.config/alacritty/alacritty.toml ./.config/alacritty/; \
 	else \
