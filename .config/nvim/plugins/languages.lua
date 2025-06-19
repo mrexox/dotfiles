@@ -25,6 +25,7 @@ return {
     lazy = true,
     ft = "go",
     build = "GoUpdateBinaries",
+    dependencies = { "ejrichards/mise.nvim" },
     keys = {
       { "<Leader>gd", "<cmd>GoDocBrowser<cr>" },
     },

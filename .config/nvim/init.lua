@@ -31,8 +31,7 @@ if open_ok and stat_ok and stat.size > 1000 * 1000 then
   vim.uv.fs_close(fd)
 end
 
--- highlights
-
+-- Highlights tweaks
 vim.cmd([[
 highlight ColorColumn ctermbg=black ctermfg=red
 highlight Folded ctermbg=black
@@ -45,38 +44,40 @@ highlight Search ctermfg=0 ctermbg=175 guifg=Black guibg=Pink
 highlight Pmenu ctermbg=black ctermfg=255 guibg=Black
 ]])
 
--- autocmd
+-- Delete whitespaces on :w
+vim.api.nvim_create_autocmd("BufWritePre", { command = "%s/\\s\\+$//e" })
 
-vim.api.nvim_create_autocmd("BufWritePre", {
-  command = "%s/\\s\\+$//e"
-})
-
-
-require("config.lazy")
-
+-- Custom commands
 vim.api.nvim_create_user_command('ToHex', '%!xxd', {bang = true})
 vim.api.nvim_create_user_command('ToBin', '%!xxd -r', {bang = true})
+
+-- Extend PATH
 vim.env.PATH = vim.env.HOME .. '/.local/bin' .. ':' .. vim.env.HOME .. '/go/bin' .. ':' .. vim.env.HOME .. '/bin' .. ':' .. vim.env.PATH
 
 -- Keymaps
-vim.keymap.set('n', '<Leader>ct', function()
-  io.popen("/opt/homebrew/bin/ctags -R --exclude=.git --exclude=node_modules --exclude=log -f tags")
-end)
-vim.keymap.set('n', '<Leader>tt', ":%! typos -w -<cr>")
-local opts = { noremap=true, silent=true }
-vim.keymap.set('n', '<Leader>o', vim.cmd.only, opts)
-vim.keymap.set('n', '<Leader>i', function() vim.cmd.edit("~/.config/nvim/init.lua") end, opts)
-vim.keymap.set('n', '<S-Left>', vim.cmd.bp, opts)
-vim.keymap.set('n', '_', vim.cmd.bp, opts)
-vim.keymap.set('n', '<S-Right>', vim.cmd.bn, opts)
-vim.keymap.set('n', '+', vim.cmd.bn, opts)
-vim.keymap.set('n', '<Leader>lg', vim.cmd.LazyGit, opts)
-vim.keymap.set('n', '<Leader>[', function() vim.cmd.diffget('//2') end, opts)
-vim.keymap.set('n', '<Leader>]', function() vim.cmd.diffget('//3') end, opts)
-vim.keymap.set('n', '<space>e', vim.diagnostic.open_float, opts)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
-vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
+local keymaps = {
+  { "<leader>ct", function() io.popen("/opt/homebrew/bin/ctags -R --exclude=.git --exclude=node_modules --exclude=log -f tags") end, },
+  { "<leader>tt", ":%! typos -w -<cr>" },
+  { "<leader>tt", ":%! typos -w -<cr>" },
+  { "<leader>o", vim.cmd.only },
+  { "<leader>i", function() vim.cmd.edit("~/.config/nvim/init.lua") end },
+  { "<S-Left>", vim.cmd.bp },
+  { "_", vim.cmd.bp },
+  { "<S-Right>", vim.cmd.bn },
+  { "+", vim.cmd.bn },
+  { "<leader>lg", vim.cmd.LazyGit },
+  { "<leader>[", function() vim.cmd.diffget('//2') end },
+  { "<leader>]", function() vim.cmd.diffget('//3') end },
+  { "<space>e", vim.diagnostic.open_float },
+  { "[d", vim.diagnostic.goto_prev },
+  { "]d", vim.diagnostic.goto_next },
+  { "<space>q", vim.diagnostic.setloclist },
+}
+for _, keymap in ipairs(keymaps) do
+  vim.keymap.set("n", keymap[1], keymap[2], { noremap = true, silent = true })
+end
+
+-- Neovide settings
 if vim.g.neovide then
   vim.g.neovide_refresh_rate = 30
   vim.g.neovide_refresh_rate_idle = 5
@@ -110,3 +111,6 @@ vim.g.sonic_pi_command = 'sonic-pi-tool'
 vim.g.sonic_pi_stop = 'stop'
 vim.g.sonic_pi_logs = 'logs'
 vim.g.sonic_pi_record = 'record'
+
+-- Initialize plugins
+require("config.lazy")

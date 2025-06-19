@@ -1,3 +1,5 @@
+local is_gui = not not vim.g.neovide
+
 return {
   -- Mise CLI
   { "ejrichards/mise.nvim" },
@@ -10,12 +12,11 @@ return {
   {
     "nvim-lualine/lualine.nvim",
     dependencies = {
-      "nvim-tree/nvim-web-devicons",
       "Shatur/neovim-ayu",
     },
     opts =  {
       options = {
-        icons_enabled = true,
+        icons_enabled = is_gui,
         theme = "ayu",
         tabline = {
           lualine_a = {},
@@ -55,6 +56,7 @@ return {
         themable = true,
         show_close_icons = false,
         show_buffer_close_icons = false,
+        show_buffer_icons = is_gui,
       }
     },
   },

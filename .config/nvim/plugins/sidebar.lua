@@ -47,7 +47,7 @@ return {
     },
     keys = {
       {
-        "<leader>d",
+        "<leader>t",
         function()
           local cwd = vim.fn.getcwd()
           vim.cmd.NvimTreeToggle(cwd)

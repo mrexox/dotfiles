@@ -45,7 +45,10 @@ return {
     keys = {
       { "<leader>gh", function() require("github-open").open_file() end, },
       { "<leader>gl", function() require("github-open").open_line() end, },
+      { "<leader>gb", function() require("github-open").open_blame_line() end, },
+      { "<leader>gc", function() require("github-open").open_commit() end, },
     },
+    dev = true,
   },
   {
     "kdheepak/lazygit.nvim",
