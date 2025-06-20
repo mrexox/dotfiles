@@ -56,7 +56,7 @@ return {
         silent = true,
       },
       {
-        "<leader>w",
+        "<leader>c",
         function()
           local curdir = vim.fn.expand("%:p:h")
           vim.cmd.NvimTreeToggle(curdir)

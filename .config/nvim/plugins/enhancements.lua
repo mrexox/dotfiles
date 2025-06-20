@@ -1,8 +1,8 @@
-local is_gui = not not vim.g.neovide
+local is_gui = vim.fn.has("gui_running")
 
 return {
   -- Mise CLI
-  { "ejrichards/mise.nvim" },
+  { "ejrichards/mise.nvim", opts = {} },
   -- Better search results
   {
     "romainl/vim-cool", init = function()
@@ -29,8 +29,6 @@ return {
       },
     },
   },
-  -- gcc to comment
-  { "tpope/vim-commentary" },
   { "mhinz/vim-startify" },
   { "ap/vim-css-color" },
   { "editorconfig/editorconfig-vim" },
