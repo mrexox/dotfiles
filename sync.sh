@@ -37,7 +37,7 @@ sync_file() {
   fi
 
   if [ -d $source ]; then
-    (set -x; rsync -d $source -d $dest --delete)
+    (set -x; rsync -a --delete $source $dest)
   elif [ -f $source ]; then
     [ ! -f $dest ] && mkdir -p $(dirname $dest)
     (set -x; cp $source $dest)
@@ -45,7 +45,7 @@ sync_file() {
 }
 
 sync_vim() {
-  sync_file ~/.config/nvim
+  sync_file ~/.config/nvim/
   sync_file ~/.vimrc
 }
 
