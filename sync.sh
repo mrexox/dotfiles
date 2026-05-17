@@ -6,11 +6,12 @@ sync.sh - a script for syncing dotfiles, configs, useful scripts.
           Syncs the source files only if they exist.
 
 Usage:
-  ./sync [-r|--restore] (rc|vim|git|emacs|alacritty|bin|tmux|wm|all)
+  ./sync [OPTION] TARGET
 
 Options:
   -r | --restore     Put files from current folder to the system.
   -h | --help        Print usage.
+  -f | --file        Sync the specific file, e.g.: -f ~/.zshrc
 
 Targets:
   rc                 .zshrc, .bashrc, .inputrc, and other .*rc files.
@@ -38,6 +39,7 @@ sync_file() {
   if [ -d $source ]; then
     (set -x; rsync -d $source -d $dest --delete)
   elif [ -f $source ]; then
+    [ ! -f $dest ] && mkdir -p $(dirname $dest)
     (set -x; cp $source $dest)
   fi
 }
@@ -60,6 +62,7 @@ sync_rc() {
   sync_file ~/.inputrc
   sync_file ~/.zshrc
   sync_file ~/.bashrc
+  sync_file ~/.config/htop/htoprc
 }
 
 sync_git() {
@@ -81,19 +84,31 @@ sync_bin() {
   sync_file ~/bin/commit-msg
 }
 
-case $1 in
-  -r | --restore)
-    ACTION=put
-    shift
-    ;;
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  *)
-    ACTION=get
-    ;;
-esac
+if [ "$#" -eq 0 ]; then
+  usage
+  exit 0
+fi
+
+while [ "$#" -gt 0 ]; do
+  case $1 in
+    -r | --restore)
+      ACTION=put
+      shift
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    -f | --file)
+      sync_file $2
+      shift 2
+      ;;
+    *)
+      ACTION=get
+      break
+      ;;
+  esac
+done
 
 case $1 in
   vim | nvim | vi)
@@ -131,7 +146,5 @@ case $1 in
     sync_emacs
     ;;
   *)
-    usage
-    exit 1
     ;;
 esac
