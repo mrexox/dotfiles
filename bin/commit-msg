@@ -1,38 +1,26 @@
 #!/usr/bin/env perl
 
-# Usage:
-#   commit-msg COMMIT_MSG_FILE
-#
 # Prepares a commit message based on branch name.
 # Handles change types, like fix/, chore/, etc. [converts to fix:, chore:]
 # Handles issue numbers, like JIRA-123 [skips them].
 #
-# Use with Lefthook:
-# prepare-commit-msg:
-#   jobs:
-#     - skip:
-#         - rebase
-#         - merge
-#       only:
-#         - ref: '*/*'
-#       run: commit-msg "{1}"
-
+# Usage: commit-msg COMMIT_MSG_FILE # <- prepares commit message
+#        commit-msg lefthook        # <- creates lefthook-local.yml
 
 use 5.010;
 use strict;
 use warnings;
+use autodie;
 
-if ($ARGV[0] eq "lefthook") {
-  open(my $fh, '>', "lefthook-local.yml") or die "Can't open lefthook-local.yml";
-  print $fh <<END;
+use constant LEFTHOOK_CONFIG => <<'END';
 templates:
   main_branch: master
 
 prepare-commit-msg:
-  jobs
+  jobs:
     - run: commit-msg "{1}" {main_branch}
       env:
-        PATH: "\$PATH:~/bin"
+        PATH: "$PATH:~/bin"
       only:
         - ref: '*/*'
       skip:
@@ -40,6 +28,10 @@ prepare-commit-msg:
         - merge
 
 END
+
+if ($ARGV[0] eq "lefthook") {
+  open(my $fh, '>', "lefthook-local.yml");
+  print $fh LEFTHOOK_CONFIG;
   close($fh);
   exit(0);
 }
@@ -49,12 +41,12 @@ my $main_branch_name = $ARGV[1] || 'master';
 
 # Read initial commit message
 my $initial_content;
-open(my $fh, '<', $commit_msg_file) or die "Can't open $commit_msg_file";
+open(my $fh, '<', $commit_msg_file);
 {
   local $/;
   $initial_content = <$fh>;
 }
-close($fh);
+close $fh;
 
 # Get branch name
 my $branch = `git rev-parse --abbrev-ref HEAD 2>/dev/null`;
@@ -64,6 +56,7 @@ $branch =~ /(?:(\w+)\/)?([A-Z]+-\d+-)?(.+)/;
 my ($type, $message) = ($1, $3);
 
 $message =~ s/-/ /g;
+
 # Uncomment if need capitalized message
 # $message = ucfirst($message);
 
@@ -71,7 +64,7 @@ my $first_commit = `git rev-list --count HEAD ^${main_branch_name}`;
 chomp($first_commit);
 
 # Write
-open($fh, '>', $commit_msg_file) or die "Can't open $commit_msg_file for write";
+open($fh, '>', $commit_msg_file);
 {
   if ($first_commit eq "0") {
     print $fh "$type: $message\n";
@@ -79,4 +72,4 @@ open($fh, '>', $commit_msg_file) or die "Can't open $commit_msg_file for write";
 
   print $fh $initial_content;
 }
-close($fh);
+close $fh;

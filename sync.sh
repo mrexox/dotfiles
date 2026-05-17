@@ -6,13 +6,14 @@ sync.sh - a script for syncing dotfiles, configs, useful scripts.
           Syncs the source files only if they exist.
 
 Usage:
-  ./sync [-r|--restore] (vim|git|emacs|alacritty|bin|tmux|wm|all)
+  ./sync [-r|--restore] (rc|vim|git|emacs|alacritty|bin|tmux|wm|all)
 
 Options:
   -r | --restore     Put files from current folder to the system.
   -h | --help        Print usage.
 
 Targets:
+  rc                 .zshrc, .bashrc, .inputrc, and other .*rc files.
   vim                Vim and Neovim configuration.
   emacs              Emacs configuration.
   alacritty          Alacritty terminal configuration.
@@ -77,6 +78,7 @@ sync_wm() {
 
 sync_bin() {
   sync_file ~/bin/git-pr
+  sync_file ~/bin/commit-msg
 }
 
 case $1 in
