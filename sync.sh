@@ -81,6 +81,7 @@ sync_wm() {
 
 sync_bin() {
   sync_file ~/bin/git-pr
+  sync_file ~/bin/ensure
   sync_file ~/bin/commit-msg
 }
 
