@@ -8,11 +8,12 @@ autoload -Uz compinit && compinit
 bindkey -e
 setopt braceccl               # expand num ranges {1..4}
 setopt extended_history       # record timestamp of command in HISTFILE
+setopt inc_append_history
 setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
-setopt hist_ignore_dups       # ignore duplicated commands history list
+setopt hist_ignore_all_dups   # ignore duplicated commands history list
 setopt hist_ignore_space      # ignore commands that start with space
 setopt hist_verify            # show command with history expansion to user before running it
-setopt share_history          # share command history across active sessions
+setopt hist_reduce_blanks
 setopt autocd
 
 ## Prompt
@@ -51,7 +52,9 @@ my-backward-delete-word() {
 }
 # create a new widget
 zle -N my-backward-delete-word
-bindkey '^W' my-backward-delete-word
+bindkey "^W" my-backward-delete-word
+bindkey "^[^?" my-backward-delete-word
+bindkey "^?" backward-delete-char
 
 ## Aliases
 
@@ -62,6 +65,7 @@ alias s='git status --short'
 alias ls='ls --color'
 alias ll='ls -GlaF'
 alias ..='cd ..'
+alias vv="NVIM_APPNAME=nvim-clean nvim"
 
 # Git aliases. See: https://github.com/ohmyzsh/ohmyzsh/wiki/Cheatsheet
 alias ggp="git push origin"
@@ -84,12 +88,13 @@ paths=(
   "$HOME/bin"
   "$HOME/go/bin"
   "/opt/homebrew/bin"
-	"/opt/homebrew/opt/make/libexec/gnubin:/opt/homebrew/opt/gnu-sed/libexec/gnubin"
+	"/opt/homebrew/opt/make/libexec/gnubin"
+  "/opt/homebrew/opt/gnu-sed/libexec/gnubin"
 #	"$(go env GOPATH)/bin"
 )
 for p in ${paths[@]}; do
   if [[ -d "$p" ]]; then
-    PATH="$PATH:$p"
+    PATH="$p:$PATH"
   fi
 done
 
